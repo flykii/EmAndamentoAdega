@@ -9,11 +9,16 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .forms import CustomUserCreationForm
 
+
+
 class LoginUserView(LoginView):
     template_name = 'login.html'
 
 class PaginaInicial(TemplateView):
     template_name = "index.html"
+
+class Sobre(TemplateView):
+    template_name = "sobre.html"
 
 class UserListView(ListView):
     model = CustomUser

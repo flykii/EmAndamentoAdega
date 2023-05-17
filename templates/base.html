@@ -1,149 +1,176 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema</title>
-    <!-- Inclua o CSS do Bootstrap -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/adega.css' %}" rel="stylesheet">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sistema</title>
+        <!-- Inclua o CSS do Bootstrap -->
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/adega.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <!-- Inclua o JavaScript do Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'js/popper.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
-</head>
-<body>
-    
-    {% block menu %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-ifpr font-125 shadow">
+        <!-- Inclua o JavaScript do Bootstrap -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="{% static 'js/popper.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        {% block importacoes %} 
+        {% endblock %}
 
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="{% static 'img/logo.png' %}" height="80" alt="">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav mr-auto">
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'index' %}">
-                           <i class="fa fa-home" aria-hidden="true"></i>
-                            Início
-                        </a>
-                    </li>
-
-                    {% if request.user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink"
-                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-plus-square" aria-hidden="true"></i>
-                            Cadastros
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-
-                            <a class="dropdown-item" href="{% url 'user_create' %}">Usuários</a>
+    </head>
+    <body>
         
+        {% block menu %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-ifpr font-115 shadow">
 
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <img src="{% static 'img/logo.png' %}" height="80" alt="">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav mr-auto">
 
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink"
-                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-list" aria-hidden="true"></i>
-                            Listagens
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'index' %}">
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                                Início
+                            </a>
+                        </li>
 
-                            <a class="dropdown-item" href="{% url 'user_list' %}">Usuários</a>
+                        {% if request.user.is_authenticated %}
+                            {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink"
+                                        role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                        Cadastros
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 
+                                        <a class="dropdown-item" href="{% url 'user_create' %}">Usuários</a>
+                                        <a class="dropdown-item" href="{% url 'cadastra_atualiza_produto' %}">Produto</a>
+                                        <a class="dropdown-item" href="{% url 'categoria_create' %}">Categoria</a>
+                                        
 
+                                    </div>
+                                </li>
+                            {% endif %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink"
+                                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-list" aria-hidden="true"></i>
+                                    Listagens
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
+                                        <a class="dropdown-item" href="{% url 'user_list' %}">Usuários</a>
+                                    {% endif %}
+                                    <a class="dropdown-item" href="{% url 'categoria_list' %}">Categoria</a>
+                                    <a class="dropdown-item" href="{% url 'lista_produtos' %}">Produtos</a>
 
-                        </div>
-                    </li>
+                                </div>
+                            </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink"
-                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-list" aria-hidden="true"></i>
-                            Informações
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink"
+                                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-list" aria-hidden="true"></i>
+                                    Informações
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" href="{% url 'contador_moeda' %}">Contador moedas</a>
+                                    
+                                    {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
+                                        <a class="dropdown-item" href="{% url 'calcular_preco' %}">Calcular preço</a>
+                                        <a class="dropdown-item" href="{% url 'dashboard' %}">dashboard</a>
+                                    {% endif %}
+                                </div>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link" href="{% url 'venda_produto' %}">
+                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                    Venda
+                                </a>
+                            </li>
+                        {% endif %}
 
-                            <a class="dropdown-item" href="#">Infrações</a>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="{% url 'sobre' %}">
+                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                Sobre
+                            </a>
+                        </li>
+                        
+                    </ul>
 
+                    <ul class="navbar-nav">
 
+                        {% if request.user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink"
+                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                                <span id="username">{{ request.user }} </span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="{% url 'user_update' user.pk %}">
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                    Meus dados</a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-lock" aria-hidden="true"></i>
+                                    Alterar senha</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'logout' %}">
+                                    <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                    Sair</a>
+                            </div>
+                        </li>
+                        {% else %}
+                        <li class="nav-item ">
+                            <a class="nav-link" href="{% url 'user_create' %}">
+                                <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                Registrar
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                Login
+                            </a>
+                        </li>
+                        {% endif %}
 
-                        </div>
-                    </li>
+                    </ul>
+                </div>
 
-                    {% endif %}
-
-                    <li class="nav-item ">
-                        <a class="nav-link" href="#">
-                            <i class="fa fa-info-circle" aria-hidden="true"></i>
-                            Sobre
-                        </a>
-                    </li>
-                    
-                </ul>
-
-                <ul class="navbar-nav">
-
-                    {% if request.user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink"
-                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-user-circle" aria-hidden="true"></i>
-                            <span id="username">{{ request.user }}</span>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="#">
-                                <i class="fa fa-user" aria-hidden="true"></i>
-                                Meus dados</a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fa fa-lock" aria-hidden="true"></i>
-                                Alterar senha</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'logout' %}">
-                                <i class="fa fa-sign-out" aria-hidden="true"></i>
-                                Sair</a>
-                        </div>
-                    </li>
-                    {% else %}
-                    <li class="nav-item ">
-                        <a class="nav-link" href="{% url 'user_create' %}">
-                            <i class="fa fa-sign-in" aria-hidden="true"></i>
-                            Registrar
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="{% url 'login' %}">
-                            <i class="fa fa-sign-in" aria-hidden="true"></i>
-                            Login
-                        </a>
-                    </li>
-                    {% endif %}
-
-                </ul>
+                <!-- fim do container -->
             </div>
+        </nav>
+        {% endblock %}
 
-            <!-- fim do container -->
-        </div>
-    </nav>
+        {% block content %}
+    
+        {% endblock %}
 
-    {% endblock %}
+        <footer>
+            {% block rodape %}
 
-    {% block content %}
+            {% endblock %}
+        </footer>
 
-    {% endblock %}
-</body>
+        {% block extra_js %}
+
+        {% endblock %}
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    </body>
 </html>

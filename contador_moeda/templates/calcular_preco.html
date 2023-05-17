@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'importacoes' %}
+<link href="{% static 'css/contador_moeda.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <form class="form-label" action="{% url 'calcular_preco' %}" method="POST">
+        {% csrf_token %}
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-sm"> Digite o preço de Custo do Produto:</span>
+            <input type="text" name="preco_produto" class="form-control-md" id="input-label">
+            <span class="input-group-text" id="inputGroup-sizing-sm"></span>
+            <button type="submit" class="btn btn-primary">Calcular</button>
+        </div>
+    </form>
+</div>
+<div class="container">
+    <table class="table table-striped table-dark">
+        <thead>
+            <tr>
+                <th>Preço de custo</th>
+                <th>Porcentagen(%)</th>
+                <th>Preço de Venda</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, value in precos_venda.items %}
+            <tr>
+                <td>{{ preco_produto }}</td>
+                <td>Com = {{ key }}%</td>
+                <td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

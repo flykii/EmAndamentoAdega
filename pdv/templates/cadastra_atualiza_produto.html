@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>{% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %} Produto</h2>
+    <form method="post" id="produto-form">
+        {% csrf_token %}
+        {% for field in form %}
+            {% if field.name != 'quantidade_na_camarafria' %}
+                <table>
+                    {{ field.label_tag }}<br>
+                    {{ field }}
+                </table>
+                
+            {% endif %}
+        {% endfor %}
+        <div id="quantidade-na-camarafria" style="display: none;">
+            <label for="{{ form.quantidade_na_camarafria.auto_id }}">Quantidade na câmara fria:</label>
+            {{ form.quantidade_na_camarafria }}
+        </div>
+        <button type="submit">Salvar</button>
+    </form>
+</div>
+</div>
+</div>
+
+    <script>
+        const form = document.getElementById('produto-form');
+        const camaraFria = form.querySelector('#id_camara_fria');
+        const quantidadeNaCamarafria = document.getElementById('quantidade-na-camarafria');
+
+        function toggleQuantidadeNaCamarafria() {
+            if (camaraFria.checked) {
+                quantidadeNaCamarafria.style.display = 'block';
+            } else {
+                quantidadeNaCamarafria.style.display = 'none';
+            }
+        }
+
+        camaraFria.addEventListener('change', toggleQuantidadeNaCamarafria);
+        toggleQuantidadeNaCamarafria();
+
+
+        const precoCompra = form.querySelector('#id_preco_compra');
+        const porcentagemLucro = form.querySelector('#id_porcentagem_lucro');
+        const precoVenda = form.querySelector('#id_preco_venda');
+        const lucroReais = form.querySelector('#id_lucro_reais');
+
+        porcentagemLucro.addEventListener('input', function() {
+            if (precoCompra.value && porcentagemLucro.value) {
+                const porcentagem = 1 - (parseFloat(porcentagemLucro.value) / 100);   
+                const venda = parseFloat(precoCompra.value) / ( porcentagem);
+                const lucro = venda - parseFloat(precoCompra.value);
+
+                precoVenda.value = venda.toFixed(2);
+                lucroReais.value = lucro.toFixed(2);
+            }
+        });
+
+        function calcularPorcentagemLucro() {
+            if (precoCompra.value && porcentagemLucro.value) {
+                const porcentagem = 1 - (parseFloat(porcentagemLucro.value) / 100);
+                const venda = parseFloat(precoCompra.value) / (porcentagem);
+                const lucro = venda - parseFloat(precoCompra.value);
+
+                precoVenda.value = venda.toFixed(2);
+                lucroReais.value = lucro.toFixed(2);
+            }
+        }
+
+        function calcularPrecoVenda() {
+            if (precoCompra.value && lucroReais.value) {
+                const venda = parseFloat(precoCompra.value) + parseFloat(lucroReais.value);
+                const porcentagem = 1 - (parseFloat(precoCompra.value) / venda);
+
+                porcentagemLucro.value = (porcentagem * 100).toFixed(2);
+                precoVenda.value = venda.toFixed(2);
+            }
+        }
+
+        function calcularLucroReais() {
+            if (precoCompra.value && precoVenda.value) {
+                const lucro = parseFloat(precoVenda.value) - parseFloat(precoCompra.value);
+                const porcentagem = 1 - (parseFloat(precoCompra.value) / parseFloat(precoVenda.value));
+
+                porcentagemLucro.value = (porcentagem * 100).toFixed(2);
+                lucroReais.value = lucro.toFixed(2);
+            }
+        }
+
+        porcentagemLucro.addEventListener('input', calcularPorcentagemLucro);
+        precoVenda.addEventListener('input', calcularLucroReais);
+        lucroReais.addEventListener('input', calcularPrecoVenda);
+
+    </script>
+    <br>
+    <br>
+    <br>
+    <br>
+{% endblock %}

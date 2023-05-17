@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <form action="?" method="get">
+      <input type="text" name="nome" id="busca" value="{{ request.get.nome }}">
+      <button class="btn btn-success" type="submit">Buscar</button>
+      <a class="btn btn-light" href="{% url 'lista_produtos' %}">limpar</a>
+  </form>
+    <div class="table">
+        <table class="table table-striped table-hover table-condensed" id="tabela_produtos">
+            <thead>
+                <tr>
+                        <th>Nome</th>
+                        <th>Preço venda</th>
+                        {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
+                            <th>Preço compra</th>
+                            <th>Porcentagem </th>
+                            <th>Lucro em reais</th>
+                        {% endif %}        
+                        <th>Estoque</th>
+                        <th>Categoria</th>
+                        <th>Camara fria</th>
+                        {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
+                            <th>Ações</th>
+                        {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos %}
+                    <tr class="produto">
+                        <td>{{ produto.nome }}</td>
+                        <td>{{ produto.preco_venda }}</td>
+                        {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
+                            <td>{{ produto.preco_compra }}</td>
+                            <td>{{ produto.porcentagem_lucro }} %</td>
+                            <td>{{ produto.lucro_reais }} </td>
+                        {% endif %}          
+                        <td>{{ produto.estoque }}</td>
+                        <td>{{ produto.categoria.nome }}</td>
+                        <td>
+                            {% if produto.quantidade_na_camarafria is None %}
+                                Não
+                            {% elif produto.quantidade_atual_camarafria <= 2  %}                          
+                                {{ produto.quantidade_atual_camarafria }} de {{ produto.quantidade_na_camarafria }}
+                            {% else %}
+                                Repor {{ produto.diferenca_quantidade }}
+                            {% endif %}
+                        </td>
+                        {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}                                      
+                            <td>
+                                <a class="btn btn-outline-warning btn-sm" href="{% url 'edita_produto' produto.id %}">Editar</a>
+                                <a class="btn btn-outline-danger btn-sm" href="{% url 'edita_produto' produto.id %}">Excluir</a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+      </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#busca').on('input', function(){
+                $.ajax({
+                    url: "{% url 'buscar_produtos' %}",
+                    data: {
+                        'nome': $('#busca').val(),
+                    },
+                    dataType: 'json',
+                    success: function(data){
+                        // limpa a tabela
+                        $(".produto").remove();
+
+                        // adiciona os produtos retornados na tabela
+                        for (var i = 0; i < data.length; i++){
+                            var produto = data[i].fields;
+                            $('#tabela_produtos').append(
+                                `<tr class="produto">
+                                    <td>${produto.nome}</td>
+                                    <td>${produto.preco_venda}</td>
+                                    <td>${produto.estoque}</td>
+                                    <td>${produto.categoria.nome}</td>
+                                    <td>${produto.camara_fria}</td>
+                                    <!-- adiciona outros campos aqui -->
+                                </tr>`
+                            );
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+

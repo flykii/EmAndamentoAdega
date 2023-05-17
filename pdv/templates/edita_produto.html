@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h1>Editar Produto</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar</button>
+  </form>
+  <form method="post" onsubmit="return confirm('Tem certeza de que deseja excluir este produto?');">
+    {% csrf_token %}
+    <input type="hidden" name="delete">
+    <button type="submit">Excluir</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,5 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
-    {% block content %}
-    <h1>Seja bem vindo!</h1>
-    {% endblock %}
+
+{% block importacoes %}
+<link href="{% static 'css/index.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container1">
+        
+        <h2>Bem-vindo à nosso sistema!</h2>
+        <p>Simplifique a gestão da sua empresa com nosso sistema</p>
+        <p>Aqui voce faz o melhor Gerenciamento.</p> 
+        
+    </div>
+    
+{% endblock %}

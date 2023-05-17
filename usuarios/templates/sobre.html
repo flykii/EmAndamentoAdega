@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container-fluid bg-light text-center p-3">
+        <h3>Sobre o projeto</h3>
+
+        <p class="lead">Se você está procurando um sistema de PDV eficiente para gerenciar sua empresa, você encontrou!</p> 
+        <p class="lead">Este sistema foi desenvolvido pensando na melhor forma de aperfeiçoar sua administração,</p>
+        <p class="lead">tornando-a mais eficiente e lucrativa,</p>
+        <p class="lead">oferece tudo o que você precisa para gerenciar suas vendas, estoque e muito mais.</p>    
+        <p class="lead">Com esta ferramenta, você terá controle total sobre suas vendas, seu estoque, finanças e etc... .</p>    
+        <p class="lead">Experimente agora mesmo e veja como é fácil e prático fazer a gestão do seu negócio e</p>    
+        <p class="lead">ter o controle da sua empresa em suas mãos..</p>    
+    </div>
+
+
+    {% block rodape %}
+        <div class="container-fluid bg-light text-center p-3">
+            <div class="row">
+                <div class="col-md-6 mx-auto text-center">
+                    <img src="{% static 'img/logomarca.png' %}" height="70" class="float-left" alt="">
+                    <p>
+                        <span class="lead">São Sebastião do Paraíso</span><br>
+                        <span>Desenvolvido por Jonatas e Guilherme</span>
+                        <span><p>&copy; 2023 PDV Venda de Produtos</p></span>
+                    </p>
+                </div>
+                <!-- <div class="col-md text-left">
+                    <img src="{% static 'img/minha_img.png' %}" height="100" alt="">
+                </div> -->
+            </div>
+        </div>
+    {% endblock %}
+{% endblock %}

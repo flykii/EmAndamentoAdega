@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'importacoes' %}
+<link href="{% static 'css/contador_moeda.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<form class="form-label" action="{% url 'contador_moeda' %}" method="POST">
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+            <br>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            <br>
+            <div class="col-md-6">
+                <h2 id="titulo2">Moedas</h2>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"> 5 centavos</span>
+                    <input class="form-control-lg" type="text" name="cinco_centavos">
+                    <p id="p">{{ cinco_centavos }} moedas = R$ {{ moeda_5|floatformat:2 }}</p>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">10 centavos</span>
+                    <input class="form-control-lg" type="text" name="dez_centavos">
+                    <p id="p"></p>{{ dez_centavos }} moedas = R$ {{ moeda_10|floatformat:2 }}</p>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">25 centavos</span>
+                    <input type="text" name="vinte_cinco_centavos" class="form-control-lg">
+                    <p id="p"></p>{{ vinte_cinco_centavos }} moedas = R$ {{ moeda_25|floatformat:2 }}</p>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">50 centavos</span>
+                    <input type="text" name="cinquenta_centavos" class="form-control-lg">
+                    <p id="p"></p>{{ cinquenta_centavos }} moedas = R$ {{ moeda_50|floatformat:2 }}</p>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"> 1 Real </span>
+                    <input class="form-control-lg" type="text" name="um_real">
+                    <p id="p">{{ um_real }} moedas = R$ {{ moeda_1|floatformat:2 }}</p>
+                </div>
+                
+
+                <button type="submit" class="btn btn-primary">Calcular</button>
+            </div>
+
+            <div class="col-md-6">
+                <h2 id="titulo2">Cedulas</h2>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"> 2 reais</span>
+                    <input class="form-control-md" type="text" name="dois_reais">
+                    <p id="p">{{ dois_reais }} notas = R$ {{ nota_2|floatformat:2 }}</p>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"> 5 reais</span>
+                    <input class="form-control-md" type="text" name="cinco_reais">
+                    <p id="p"></p>{{ cinco_reais }} notas = R$ {{ nota_5|floatformat:2 }}</p>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"> 10 reais</span>
+                    <input type="text" name="dez_reais" class="form-control-md">
+                    <p id="p"></p>{{ dez_reais }} notas = R$ {{ nota_10|floatformat:2 }}</p>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"> 20 reais</span>
+                    <input type="text" name="vinte_reais" class="form-control-md">
+                    <p id="p"></p>{{ vinte_reais }} notas = R$ {{ nota_20|floatformat:2 }}</p>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"> 50 reais</span>
+                    <input class="form-control-md" type="text" name="cinquenta_reais">
+                    <p id="p">{{ cinquenta_reais }} notas = R$ {{ nota_50|floatformat:2 }}</p>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"> 100 reais</span>
+                    <input class="form-control-md" type="text" name="cem_reais">
+                    <p id="p">{{ cem_reais }} notas = R$ {{ nota_100|floatformat:2 }}</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Calcular</button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
