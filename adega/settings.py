@@ -141,6 +141,12 @@ AUTH_USER_MODEL = 'usuarios.CustomUser'
 
 LOGIN_REDIRECT_URL = 'index'
 
+CSRF_TRUSTED_ORIGINS = ['https://sistema-jonts-web.up.railway.app/']
+CSRF_USE_SESSIONS = True
+SESSION_COOKIE_DOMAIN = 'https://sistema-jonts-web.up.railway.app/'
+
+
+
 MESSAGE_TAGS = {
     constants.DEBUG: 'alert-primary',
     constants.INFO: 'alert-info',
