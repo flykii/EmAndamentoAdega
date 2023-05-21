@@ -141,8 +141,8 @@ AUTH_USER_MODEL = 'usuarios.CustomUser'
 
 LOGIN_REDIRECT_URL = 'index'
 
-CSRF_TRUSTED_ORIGINS = ['https://sistema-jonts-web.up.railway.app/']
-CSRF_USE_SESSIONS = True
+CSRF_TRUSTED_ORIGINS = []
+CSRF_USE_SESSIONS = False
 SESSION_COOKIE_DOMAIN = 'None'
 
 

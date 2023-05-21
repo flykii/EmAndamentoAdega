@@ -10,7 +10,7 @@
                     <table>
                         {{ form.as_table }}
                     </table>                   
-                    <button type="submit" class="btn btn-primary">Entrar</button>
+                    <button type="submit" class="btn btn-primary" name="csrfmiddlewaretoken">Entrar</button>
                     <a href="{% url 'user_create' %}" class="btn btn-link">Cadastre-se</a>
                 </form>
             </div>
