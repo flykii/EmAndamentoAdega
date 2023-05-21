@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-h-b)=+3lbt_=4x^q*qsf)ht071_rqqt1qssp=1y!4ek-n3@n0l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -143,8 +143,7 @@ LOGIN_REDIRECT_URL = 'index'
 
 CSRF_TRUSTED_ORIGINS = ['https://sistema-jonts-web.up.railway.app/']
 CSRF_USE_SESSIONS = True
-SESSION_COOKIE_DOMAIN = 'https://sistema-jonts-web.up.railway.app/'
-
+SESSION_COOKIE_DOMAIN = 'None'
 
 
 MESSAGE_TAGS = {
