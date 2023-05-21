@@ -1,13 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Categorias</h2>
-    <a href="{% url 'categoria_create' %}">Adicionar Categoria</a>
-    <ul>
+<!-- Esta é a classe principal do Bootstrap para centrar e alinhar o conteúdo -->
+<div class="container my-4">
+    <h2 class="display-4">Categorias</h2>
+    <a class="btn btn-primary" href="{% url 'categoria_create' %}">Adicionar Categoria</a>
+    <ul class="list-group">
         {% for categoria in categorias %}
-            <li>{{ categoria.nome }}</li>
+        <li class="list-group-item">{{ categoria.nome }}</li>
         {% endfor %}
     </ul>
+</div>
+
+
+
     <hr>
     <hr>
     <hr>
@@ -24,19 +30,19 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="group-default">
-                        <label for="valor_total_produtos">Valor dos produtos</label>
+                        <label for="valor_total_produtos">Custo de todos os produtos</label>
                         <input type="text" class="input-default" id="valor_total_produtos" name="valor_total_produtos" readonly="readonly">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="group-default">
-                        <label for="valor_IPI">Valor do IPI</label>
+                        <label for="valor_IPI">Venda Todos os produtos</label>
                         <input type="text" class="input-default validadeNumber validateFormat calculaTotal" id="valor_IPI" name="valor_IPI" readonly="readonly">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="group-default">
-                        <label for="frete_pedido">Valor do frete</label>
+                        <label for="frete_pedido">Lucro em R$ geral</label>
                         <input type="text" class="input-default validadeNumber validateFormat calculaTotal" name="frete_pedido" id="frete_pedido">
                     </div>
                 </div>
@@ -44,7 +50,7 @@
                     <div class="group-default">
                         <div class="row">
                             <div class="col-md-12">
-                                <label for="desconto_pedido">Valor do desconto</label>
+                                <label for="desconto_pedido">Ganho de % geral</label>
                             </div>
                             <div class="col-md-6 ms-xs-top">
                                 <input name="desconto_pedido" type="text" id="desconto_pedido" class="input-default validadeNumber validateFormat calculaTotal" placeholder="R$">

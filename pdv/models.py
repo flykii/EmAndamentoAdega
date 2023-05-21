@@ -1,4 +1,7 @@
 from django.db import models
+from django.conf import settings
+
+
 
 class Categoria(models.Model):
     nome = models.CharField(max_length=100)
@@ -49,10 +52,26 @@ class Produto(models.Model):
 
 
 class Venda(models.Model):
+    FORMAS_PAGAMENTO = (
+        ('credito', 'Cartão de Crédito'),
+        ('debito', 'Cartão de Débito'),
+        ('pix', 'PIX'),
+        ('dinheiro', 'Dinheiro'),
+    )
+    vendedor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     quantidade = models.IntegerField()
-    forma_pagamento = models.CharField(max_length=20)
-    data = models.DateField(auto_now_add=True)
+    forma_pagamento = models.CharField(max_length=20, choices=FORMAS_PAGAMENTO, null=True, blank=True)
+    data = models.DateTimeField(auto_now_add=True)
+    total_venda = models.DecimalField(max_digits=8, decimal_places=2)
+    preco_venda = models.DecimalField(max_digits=8, decimal_places=2)
+
+    def save(self, *args, **kwargs):
+        self.preco_venda = self.produto.preco_venda
+        self.total_venda = self.preco_venda * self.quantidade
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Venda de {self.produto.nome} - {self.quantidade} unidades"
+        return f'{self.forma_pagamento}'
+
+

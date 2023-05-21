@@ -24,6 +24,7 @@
         <th class="table-warning">Quantidade</th>
         <th class="table-warning">Preço</th>
         <th class="table-warning">Subtotal</th>
+        <th class="table-warning">Remover</th>
       </tr>
     </thead>
     <tbody>
@@ -32,7 +33,11 @@
           <td>{{ item.nome }}</td>
           <td>{{ item.quantidade }}</td>
           <td>{{ item.preco }}</td>
-          <td>{{ item.subtotal }}</td>
+          <td>{{ item.subtotal }}</td>          
+          <td>
+            <a class="badge badge-danger" href="{% url 'remover_item_carrinho' forloop.counter0 %}" 
+              onclick="return confirm('Você tem certeza que deseja remover este item do carrinho?');">Remover</a>
+          </td>
         </tr>
       {% endfor %}
     </tbody>

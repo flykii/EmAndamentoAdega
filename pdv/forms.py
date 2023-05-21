@@ -1,5 +1,5 @@
 from django import forms
-from .models import Produto, Categoria
+from .models import Produto, Categoria, Venda
 
 class CategoriaForm(forms.ModelForm):
     class Meta:
@@ -18,19 +18,17 @@ class ProdutoForm(forms.ModelForm):
 
 
 class VendaForm(forms.Form):
-    produto = forms.ModelChoiceField(queryset=Produto.objects.all(), label="Produto")
+    produto = forms.ModelChoiceField(
+        queryset=Produto.objects.filter(estoque__gt=0), 
+        label="Produto"
+    )
     quantidade = forms.IntegerField(min_value=1, label="Quantidade")
 
 
-class FinalizarVendaForm(forms.Form):
-    FORMAS_PAGAMENTO = (
-        ('credito', 'Cartão de Crédito'),
-        ('debito', 'Cartão de Débito'),
-        ('pix', 'PIX'),
-        ('dinheiro', 'Dinheiro'),
-    )
-    forma_pagamento = forms.ChoiceField(choices=FORMAS_PAGAMENTO, widget=forms.RadioSelect)
+class FinalizarVendaForm(forms.Form):    
+    forma_pagamento = forms.ChoiceField(choices=Venda.FORMAS_PAGAMENTO, widget=forms.RadioSelect)
     valor_recebido = forms.FloatField(required=False, min_value=0, widget=forms.NumberInput(attrs={'class': 'dinheiro'}))
+
 
 
 class MesFiltroForm(forms.Form):
@@ -44,9 +42,3 @@ class MesFiltroForm(forms.Form):
 class DiaFiltroForm(forms.Form):
     dia = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='Dia')
 
-
-class FormaPagamentoFiltroForm(forms.Form):
-    FORMAS_PAGAMENTO = [
-        ('credito', 'Crédito'), ('debito', 'Débito'), ('pix', 'PIX'), ('dinheiro', 'Dinheiro')
-    ]
-    forma_pagamento = forms.ChoiceField(choices=FORMAS_PAGAMENTO, label='Forma de Pagamento')

@@ -7,7 +7,8 @@ from django.db.models import Q
 from datetime import datetime
 from django.http import JsonResponse
 from django.core import serializers
-
+from django.utils import timezone
+from django.db.models.functions import TruncDay, TruncMonth
 
 
 
@@ -54,6 +55,7 @@ def lista_produtos(request):
 def venda_produto(request):
     carrinho = request.session.get('carrinho', [])
     total = 0
+    item_carrinho = {}
 
     if request.method == "POST":
         form = VendaForm(request.POST)
@@ -61,10 +63,9 @@ def venda_produto(request):
             produto = form.cleaned_data['produto']
             quantidade = form.cleaned_data['quantidade']
             subtotal = float(produto.preco_venda) * quantidade
-
             # Atualizando o estoque
             produto.atualizar_estoque(quantidade)
-
+           
             if produto.camara_fria and produto.quantidade_na_camarafria  and produto.quantidade_atual_camarafria is not None:
                 produto.quantidade_atual_camarafria = max(0, produto.quantidade_na_camarafria - quantidade)
                 produto.save()
@@ -80,8 +81,12 @@ def venda_produto(request):
             request.session['carrinho'] = carrinho
 
             # Criar nova instância de Venda e salvar no banco de dados
-            venda = Venda(produto=produto, quantidade=quantidade)
+            venda = Venda(produto=produto, quantidade=quantidade, vendedor=request.user)
             venda.save()
+
+            # Adicionar id da venda ao item do carrinho
+            item_carrinho['venda_id'] = venda.id
+
 
     for item in carrinho:  
         total += item['subtotal']
@@ -107,27 +112,40 @@ def finalizar_venda(request):
         form = FinalizarVendaForm(request.POST)
         if form.is_valid():
             forma_pagamento = form.cleaned_data['forma_pagamento']
-            
             # Adicione esta linha para obter o valor_recebido, mesmo que seja None
             valor_recebido = form.cleaned_data.get('valor_recebido')
-
+            for item in carrinho:
+                # Buscar a venda usando o id da venda em vez do id do produto
+                venda = Venda.objects.get(id=item['venda_id'])
+                venda.forma_pagamento = forma_pagamento
+                venda.data_venda = timezone.now()
+                venda.save()
+            
             if forma_pagamento == 'dinheiro':
                 if valor_recebido is None or valor_recebido < total:
                     messages.error(request, 'Valor recebido insuficiente')
                 else:
                     troco = valor_recebido - total
                     messages.success(request, f'Troco: R${troco:.2f}')
+                    for item in carrinho:
+                        venda = Venda.objects.get(id=item['venda_id'])
+
+                        venda.forma_pagamento = forma_pagamento
+                        venda.save()
                     request.session['carrinho'] = []
                     return redirect('venda_produto')
             else:
+                for item in carrinho:
+                    venda = Venda.objects.get(id=item['venda_id'])
+
+                    venda.forma_pagamento = forma_pagamento
+                    venda.save()
                 messages.success(request, 'Venda finalizada com sucesso')
                 request.session['carrinho'] = []
                 return redirect('venda_produto')
 
-
     return render(request, 'finalizar_venda.html', {'form': form, 'total': total})
     
-
 
 def edita_produto(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
@@ -142,7 +160,6 @@ def edita_produto(request, pk):
     else:
         form = ProdutoForm(instance=produto)
     return render(request, 'edita_produto.html', {'form': form, 'produto': produto})
-
 
 
 def dashboard(request):
@@ -161,12 +178,39 @@ def dashboard(request):
     if dia:
         venda_filter &= Q(data__day=dia)
 
+    vendas_dia = Venda.objects.filter(data=TruncDay(timezone.now())).filter(venda_filter)
+    vendas_mes = Venda.objects.filter(data__gte=timezone.now().replace(day=1)).filter(venda_filter)# valores que você quer adicionar
+    total_vendas_dia = vendas_dia.count()
+    total_vendas_mes = vendas_mes.count()
+    total_itens_vendidos_dia = sum(venda.quantidade for venda in vendas_dia) if vendas_dia.exists() else 0
+    total_itens_vendidos_mes = sum(venda.quantidade for venda in vendas_mes) if vendas_mes.exists() else 0
+
+
     # Item mais vendido e menos vendido (por dia e mês)
-    item_mais_vendido_dia = Venda.objects.filter(venda_filter).values('produto__nome').annotate(total=Count('id')).order_by('-total').first()
-    item_menos_vendido_dia = Venda.objects.filter(venda_filter).values('produto__nome').annotate(total=Count('id')).order_by('total').first()
-    item_mais_vendido_mes = Venda.objects.filter(venda_filter).values('produto__nome').annotate(total=Count('id')).order_by('-total').first()
-    item_menos_vendido_mes = Venda.objects.filter(venda_filter).values('produto__nome').annotate(total=Count('id')).order_by('total').first()
-   
+    item_mais_vendido_dia = (
+        vendas_dia.values('produto__nome')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+        .first()
+    )
+    item_menos_vendido_dia = (
+        vendas_dia.values('produto__nome')
+        .annotate(total=Count('id'))
+        .order_by('total')
+        .first()
+    )
+    item_mais_vendido_mes = (
+        vendas_mes.values('produto__nome')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+        .first()
+    )
+    item_menos_vendido_mes = (
+        vendas_mes.values('produto__nome')
+        .annotate(total=Count('id'))
+        .order_by('total')
+        .first()
+    )
     # Quantidade total de itens vendidos (por dia e mês)
     quantidade_total_vendida_dia = Venda.objects.filter(venda_filter).count()
     quantidade_total_vendida_mes = Venda.objects.filter(venda_filter).count()
@@ -190,6 +234,10 @@ def dashboard(request):
     valor_vendas_mes = Venda.objects.filter(venda_filter).values('forma_pagamento').annotate(total=Sum('produto__preco_venda'))
 
     context = {
+        'total_vendas_dia': total_vendas_dia,
+        'total_vendas_mes': total_vendas_mes,
+        'total_itens_vendidos_dia': total_itens_vendidos_dia,
+        'total_itens_vendidos_mes': total_itens_vendidos_mes,
         'item_mais_vendido_dia': item_mais_vendido_dia,
         'item_menos_vendido_dia': item_menos_vendido_dia,
         'item_mais_vendido_mes': item_mais_vendido_mes,
@@ -206,12 +254,18 @@ def dashboard(request):
 
 
 
-def buscar_produtos(request):
-    descricao = request.GET.get('descricao', '')
-    produtos = Produto.objects.filter(descricao__icontains=descricao)
-    produtos_list = serializers.serialize('json', produtos)
-    return JsonResponse(produtos_list, safe=False)
+def listar_vendas(request):
+    vendas = Venda.objects.all().order_by('-data')
+    return render(request, 'listar_vendas.html', {'vendas': vendas})
 
 
-def somente_teste(request):
-    return render(request, 'somente_teste.html')
+
+def remover_item_carrinho(request, item_index):
+    carrinho = request.session.get('carrinho', [])
+    if item_index < len(carrinho):
+        item = carrinho.pop(item_index)
+        produto = Produto.objects.get(id=item['produto_id'])
+        produto.estoque += item['quantidade']
+        produto.save()
+        request.session['carrinho'] = carrinho
+    return redirect('venda_produto')

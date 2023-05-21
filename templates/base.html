@@ -74,6 +74,7 @@
                                     {% endif %}
                                     <a class="dropdown-item" href="{% url 'categoria_list' %}">Categoria</a>
                                     <a class="dropdown-item" href="{% url 'lista_produtos' %}">Produtos</a>
+                                    <a class="dropdown-item" href="{% url 'listar_vendas' %}">Vendas</a>
 
                                 </div>
                             </li>
@@ -159,11 +160,11 @@
     
         {% endblock %}
 
-        <footer>
+        
             {% block rodape %}
 
             {% endblock %}
-        </footer>
+        
 
         {% block extra_js %}
 

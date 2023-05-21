@@ -1,34 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-  <form action="?" method="get">
-      <input type="text" name="nome" id="busca" value="{{ request.get.nome }}">
-      <button class="btn btn-success" type="submit">Buscar</button>
+<div class="fluid">
+    <h1 style="text-align:center" >Lista de Produtos</h1>
+  <form  method="GET">
+      <input type="seach" name="search" id="busca"  placeholder="Busque aqui!">
+      <button class="btn btn-success" >Buscar</button>
       <a class="btn btn-light" href="{% url 'lista_produtos' %}">limpar</a>
   </form>
     <div class="table">
         <table class="table table-striped table-hover table-condensed" id="tabela_produtos">
             <thead>
                 <tr>
-                        <th>Nome</th>
-                        <th>Preço venda</th>
-                        {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
-                            <th>Preço compra</th>
-                            <th>Porcentagem </th>
-                            <th>Lucro em reais</th>
-                        {% endif %}        
-                        <th>Estoque</th>
-                        <th>Categoria</th>
-                        <th>Camara fria</th>
-                        {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
-                            <th>Ações</th>
-                        {% endif %}
+                    <th>Repor</th>
+                    <th>Qt. MAX na C. fria</th>
+                    <th>Qt. Atual na C. fria</th>
+                    <th>Nome</th>
+                    <th>Preço venda</th>
+                    {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
+                        <th>Preço compra</th>
+                        <th>Porcentagem </th>
+                        <th>Lucro em reais</th>
+                    {% endif %}        
+                    <th>Estoque</th>
+                    <th>Categoria</th>
+                    <th>Camara fria</th>
+                    {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
+                        <th>Ações</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
                 {% for produto in produtos %}
                     <tr class="produto">
+                        <td>{{ produto.diferenca_quantidade }}</td>
+                        <td>{{ produto.quantidade_na_camarafria }}</td>
+                        <td>{{ produto.quantidade_atual_camarafria }}</td>
                         <td>{{ produto.nome }}</td>
                         <td>{{ produto.preco_venda }}</td>
                         {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
@@ -41,7 +48,7 @@
                         <td>
                             {% if produto.quantidade_na_camarafria is None %}
                                 Não
-                            {% elif produto.quantidade_atual_camarafria <= 2  %}                          
+                            {% elif produto.quantidade_atual_camarafria >= 3  %}                          
                                 {{ produto.quantidade_atual_camarafria }} de {{ produto.quantidade_na_camarafria }}
                             {% else %}
                                 Repor {{ produto.diferenca_quantidade }}
@@ -67,7 +74,7 @@
         $(document).ready(function(){
             $('#busca').on('input', function(){
                 $.ajax({
-                    url: "{% url 'buscar_produtos' %}",
+                    url: "#",
                     data: {
                         'nome': $('#busca').val(),
                     },
