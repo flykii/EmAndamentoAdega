@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-h-b)=+3lbt_=4x^q*qsf)ht071_rqqt1qssp=1y!4ek-n3@n0l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'usuarios',
     'contador_moeda',
     'pdv',
@@ -126,9 +127,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'adega/static'), ]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
 
 # Default primary key field type
@@ -138,7 +139,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'usuarios.CustomUser'
 
-LOGIN_REDIRECT_URL = 'user_list'
+LOGIN_REDIRECT_URL = 'index'
 
 MESSAGE_TAGS = {
     constants.DEBUG: 'alert-primary',

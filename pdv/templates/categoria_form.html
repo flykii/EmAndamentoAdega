@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container">
     <h2>Adicionar Categoria</h2>
+    <br>
     <form method="post">
         {% csrf_token %}
         {{ categoria.as_p }}
         <button type="submit">Salvar</button>
     </form>
+</div>
 {% endblock %}
