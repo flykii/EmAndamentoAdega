@@ -145,6 +145,7 @@ def finalizar_venda(request):
                 return redirect('venda_produto')
 
     return render(request, 'finalizar_venda.html', {'form': form, 'total': total})
+
     
 
 def edita_produto(request, pk):

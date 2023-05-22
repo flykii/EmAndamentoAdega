@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
-    {% block content %}
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h2 class="text-center my-4">Faça seu login</h2>
-                <form method="POST">
-                    {% csrf_token %}
-                    <table>
-                        {{ form.as_table }}
-                    </table>                   
-                    <button type="submit" class="btn btn-primary" name="csrfmiddlewaretoken">Entrar</button>
-                    <a href="{% url 'user_create' %}" class="btn btn-link">Cadastre-se</a>
-                </form>
-            </div>
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center my-4">Faça seu login</h2>
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <table>
+                    {{ form.as_table }}
+                </table>                   
+                <button type="submit" class="btn btn-primary">Entrar</button>
+                <a href="{% url 'user_create' %}" class="btn btn-link">Cadastre-se</a>
+            </form>
         </div>
     </div>
-    {% endblock %}
-
+</div>
+{% endblock %}

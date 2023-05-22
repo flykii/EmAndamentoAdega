@@ -1,7 +1,6 @@
 from django.urls import path
 from .views import UserListView, UserCreateView, UserUpdateView, UserDeleteView, LoginUserView, PaginaInicial, Sobre
 from django.contrib.auth import views as auth_views
-from . import views
 
 urlpatterns = [
     path('login/', LoginUserView.as_view(), name='login'),

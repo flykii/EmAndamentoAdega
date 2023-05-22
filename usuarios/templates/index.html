@@ -11,6 +11,10 @@
     <div class="container1">
         
         <h2>Bem-vindo à nosso sistema!</h2>
+        >{{ request.user }}<
+        <a class="dropdown-item" href="{% url 'logout' %}">
+            sair
+            </a>
         <p>Simplifique a gestão da sua empresa com nosso sistema</p>
         <p>Aqui voce faz o melhor Gerenciamento.</p> 
         
