@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="fluid">
+<div class="container">
     <h1 style="text-align:center" >Lista de Produtos</h1>
-  <form  method="GET">
-      <input type="seach" name="search" id="busca"  placeholder="Busque aqui!">
+  <form role="search" method="GET"  action="{% url 'buscar_produto' %}">
+      <input type="seach" name="q" id="busca"   placeholder="Busque aqui!">
       <button class="btn btn-success" >Buscar</button>
       <a class="btn btn-light" href="{% url 'lista_produtos' %}">limpar</a>
   </form>
@@ -12,10 +12,7 @@
         <table class="table table-striped table-hover table-condensed" id="tabela_produtos">
             <thead>
                 <tr>
-                    <th>Repor</th>
-                    <th>Qt. MAX na C. fria</th>
-                    <th>Qt. Atual na C. fria</th>
-                    <th>Nome</th>
+                    <th>Descrição</th>
                     <th>Preço venda</th>
                     {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
                         <th>Preço compra</th>
@@ -33,10 +30,7 @@
             <tbody>
                 {% for produto in produtos %}
                     <tr class="produto">
-                        <td>{{ produto.diferenca_quantidade }}</td>
-                        <td>{{ produto.quantidade_na_camarafria }}</td>
-                        <td>{{ produto.quantidade_atual_camarafria }}</td>
-                        <td>{{ produto.nome }}</td>
+                        <td>{{ produto.descricao }}</td>
                         <td>{{ produto.preco_venda }}</td>
                         {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
                             <td>{{ produto.preco_compra }}</td>

@@ -1,28 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h2>{% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %} Produto</h2>
-    <form method="post" id="produto-form">
-        {% csrf_token %}
-        {% for field in form %}
+    <div class="container">
+        <h2>{% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %} Produto</h2>
+        <form method="post" id="produto-form">
+            {% csrf_token %}
+            {% for field in form %}
             {% if field.name != 'quantidade_na_camarafria' %}
-                <table>
-                    {{ field.label_tag }}<br>
-                    {{ field }}
-                </table>
-                
+            <table>
+                {{ field.label_tag }}<br>
+                {{ field }}
+            </table>
+
             {% endif %}
-        {% endfor %}
-        <div id="quantidade-na-camarafria" style="display: none;">
-            <label for="{{ form.quantidade_na_camarafria.auto_id }}">Quantidade na câmara fria:</label>
-            {{ form.quantidade_na_camarafria }}
-        </div>
-        <button type="submit">Salvar</button>
-    </form>
-</div>
-</div>
-</div>
+            {% endfor %}
+            <div id="quantidade-na-camarafria" style="display: none;">
+                <label for="{{ form.quantidade_na_camarafria.auto_id }}">Quantidade na câmara fria:</label>
+                {{ form.quantidade_na_camarafria }}
+            </div>
+            <button type="submit">Salvar</button>
+        </form>
+    </div>
 
     <script>
         const form = document.getElementById('produto-form');
@@ -46,10 +44,10 @@
         const precoVenda = form.querySelector('#id_preco_venda');
         const lucroReais = form.querySelector('#id_lucro_reais');
 
-        porcentagemLucro.addEventListener('input', function() {
+        porcentagemLucro.addEventListener('input', function () {
             if (precoCompra.value && porcentagemLucro.value) {
-                const porcentagem = 1 - (parseFloat(porcentagemLucro.value) / 100);   
-                const venda = parseFloat(precoCompra.value) / ( porcentagem);
+                const porcentagem = 1 - (parseFloat(porcentagemLucro.value) / 100);
+                const venda = parseFloat(precoCompra.value) / (porcentagem);
                 const lucro = venda - parseFloat(precoCompra.value);
 
                 precoVenda.value = venda.toFixed(2);
@@ -92,7 +90,35 @@
         precoVenda.addEventListener('input', calcularLucroReais);
         lucroReais.addEventListener('input', calcularPrecoVenda);
 
-    </script> 
+        function calcularResumo() {
+            // Obter os valores dos campos do formulário
+            const precoCompra = document.getElementById('preco-compra');
+            const precoVenda = document.getElementById('preco-venda');
+            const quantidade = document.getElementById9('estoque');
+
+            // Calcular o resumo
+            const valorInvestido = precoCompra * quantidade;
+            const lucro = (precoVenda * quantidade) - valorInvestido;
+            const retorno = valorInvestido + lucro;
+
+            // Formatar os valores para exibição na página
+            const formatter = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const valorInvestidoFormatado = formatter.format(valorInvestido);
+            const lucroFormatado = formatter.format(lucro);
+            const retornoFormatado = formatter.format(retorno);
+
+            // Exibir o resumo na página
+            const resumoElement = document.getElementById("resumo");
+            resumoElement.innerHTML = `
+            <div class="resumo">
+                <div><b>Resumo do investimento</b></div></br>
+                <div>Valor investido: R$ ${valorInvestidoFormatado}</div>
+                <div>Lucro: R$ ${lucroFormatado}</div>
+                <div>Retorno total: R$ ${retornoFormatado}</div>
+            </div>`;
+        }
+
+    </script>
     <br>
     <br>
 {% endblock %}

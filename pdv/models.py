@@ -23,6 +23,8 @@ class Produto(models.Model):
     camara_fria = models.BooleanField(default=False)
     quantidade_na_camarafria = models.IntegerField(null=True, blank=True)  # quantidade máxima
     quantidade_atual_camarafria = models.IntegerField(default=0)  # quantidade atual
+    embalagem = models.CharField(max_length=100)  # Novo campo
+    unidade_medida = models.CharField(max_length=50)  # Novo campo
     
     imagem = models.ImageField(upload_to='produtos/', blank=True, null=True)
 
@@ -50,6 +52,12 @@ class Produto(models.Model):
             nao = 'Não'
             return nao
 
+    def save(self, *args, **kwargs):
+        self.nome = self.nome.upper()
+        self.embalagem = self.embalagem.upper()
+        self.unidade_medida = self.unidade_medida.upper()
+        self.descricao = f"{self.nome} {self.embalagem} {self.unidade_medida}"
+        super().save(*args, **kwargs)
 
 class Venda(models.Model):
     FORMAS_PAGAMENTO = (
@@ -57,6 +65,7 @@ class Venda(models.Model):
         ('debito', 'Cartão de Débito'),
         ('pix', 'PIX'),
         ('dinheiro', 'Dinheiro'),
+        ('cliente', 'Cliente'),  # Novo item
     )
     vendedor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
@@ -73,5 +82,6 @@ class Venda(models.Model):
 
     def __str__(self):
         return f'{self.forma_pagamento}'
-
+    
+    
 

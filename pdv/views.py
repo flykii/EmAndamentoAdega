@@ -168,6 +168,8 @@ def dashboard(request):
     mes = request.GET.get('mes')  # Obter o filtro de mês do GET request
     dia = request.GET.get('dia')  # Obter o filtro de dia do GET request
     venda_filter = Q()  # Iniciar o objeto de filtro vazio
+    custo_total_produtos = calcular_custo_total_produtos()
+
     
     if dia:
         dia = datetime.strptime(dia, '%Y-%m-%d').day
@@ -249,10 +251,19 @@ def dashboard(request):
         'valor_total_vendas_mes': valor_total_vendas_mes,
         'valor_vendas_dia': valor_vendas_dia,
         'valor_vendas_mes': valor_vendas_mes,
+        'custo_total_produtos': custo_total_produtos,
     }
 
     return render(request, 'dashboard.html', context)
 
+def calcular_custo_total_produtos():
+        produtos = Produto.objects.all()
+        custo_total = 0
+
+        for produto in produtos:
+            custo_total += produto.estoque * produto.preco_venda
+
+        return custo_total
 
 
 def listar_vendas(request):
@@ -270,3 +281,8 @@ def remover_item_carrinho(request, item_index):
         produto.save()
         request.session['carrinho'] = carrinho
     return redirect('venda_produto')
+
+def buscar_produto(request):
+    query = request.GET.get('q', '')  # Obtém o termo de busca do parâmetro GET 'q'
+    produtos = Produto.objects.filter(nome__icontains=query) 
+    return render(request, 'lista_produtos.html', {'produtos': produtos})

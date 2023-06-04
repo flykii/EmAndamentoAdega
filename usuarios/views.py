@@ -3,10 +3,6 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, T
 from .models import CustomUser
 from .forms import CustomUserCreationForm, CustomUserEditForm
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
 from .forms import CustomUserCreationForm
 
 
