@@ -153,7 +153,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'X-CSRFToken',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://jonts-sistemas.up.railway.app/']
+CSRF_TRUSTED_ORIGINS = ['https://jonts-sistemas.up.railway.app']
 
 MESSAGE_TAGS = {
     constants.DEBUG: 'alert-primary',
