@@ -11,19 +11,27 @@ from django.utils import timezone
 from django.db.models.functions import TruncDay, TruncMonth
 
 
-
-def categoria_list(request):
-    categorias = Categoria.objects.all()
-    return render(request, 'categoria_list.html', {'categorias': categorias})
-
 def categoria_create(request):
     categoria = CategoriaForm(request.POST or None)
 
     if categoria.is_valid():
-        categoria.save()
-        return redirect('categoria_list')
+        nome_categoria = categoria.cleaned_data['nome']
+        if Categoria.objects.filter(nome=nome_categoria).exists():
+            categoria.add_error('nome', 'Essa categoria já está cadastrada.')
+        else:
+            categoria.save()
+            return redirect('categoria_list')
 
     return render(request, 'categoria_form.html', {'categoria': categoria})
+
+
+
+def categoria_list(request):
+    categorias = Categoria.objects.all().order_by('nome')  # Recupera as categorias ordenadas por nome
+    categorias_upper = [categoria.nome.upper() for categoria in categorias]  # Transforma os nomes em maiúsculas
+
+    return render(request, 'categoria_list.html', {'categorias': categorias_upper})
+
 
 
 def cadastra_atualiza_produto(request, pk=None):
@@ -49,7 +57,7 @@ def cadastra_atualiza_produto(request, pk=None):
     return render(request, 'cadastra_atualiza_produto.html', {'form': form})
 
 def lista_produtos(request):
-    produtos = Produto.objects.all()
+    produtos = Produto.objects.all().order_by('-id')
     return render(request, 'lista_produtos.html', {'produtos': produtos})
 
 def venda_produto(request):
@@ -237,10 +245,10 @@ def dashboard(request):
     valor_vendas_mes = Venda.objects.filter(venda_filter).values('forma_pagamento').annotate(total=Sum('produto__preco_venda'))
 
     context = {
-        'total_vendas_dia': total_vendas_dia,
-        'total_vendas_mes': total_vendas_mes,
-        'total_itens_vendidos_dia': total_itens_vendidos_dia,
-        'total_itens_vendidos_mes': total_itens_vendidos_mes,
+        'total_vendas_dia': round(total_vendas_dia, 2),
+        'total_vendas_mes': round(total_vendas_mes, 2),
+        'total_itens_vendidos_dia': round(total_itens_vendidos_dia, 2),
+        'total_itens_vendidos_mes': round(total_itens_vendidos_mes, 2),
         'item_mais_vendido_dia': item_mais_vendido_dia,
         'item_menos_vendido_dia': item_menos_vendido_dia,
         'item_mais_vendido_mes': item_mais_vendido_mes,
@@ -267,7 +275,7 @@ def calcular_custo_total_produtos():
 
 
 def listar_vendas(request):
-    vendas = Venda.objects.all().order_by('-data')
+    vendas = Venda.objects.filter(forma_pagamento__isnull=False).order_by('-data')
     return render(request, 'listar_vendas.html', {'vendas': vendas})
 
 

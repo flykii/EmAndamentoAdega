@@ -2,6 +2,7 @@
 /* 
 Cores do IFPR 
 */
+
 .bg-ifpr {
     background-color: black;
 }
@@ -60,7 +61,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::
 
 
 /* 
-Personalização da Barra de menu pra ficar igual do site 
+Personalização da Barra de menu
 */
 .navbar {
     padding-top: 15px; /* Adicione padding-top */
@@ -98,4 +99,18 @@ Largura máxima das tabelas para não ficar mal formatada
 */
 table td{
     max-width: 500px;
+}
+
+.resumo {
+    background-color: #f9f9f9!important; /* Cor de fundo da div */
+    border: 1px solid #ccc;    /* Borda da div */
+    padding: 10px;             /* Espaçamento interno da div */
+    margin-top: 10px;          /* Espaçamento acima da div */
+    border-radius: 5px;        /* Borda arredondada da div */
+}
+.p-rodape {
+    background-color: #977c31ab!important;
+    color: black;
+    border: 1px;
+    border-radius: 6px;
 }

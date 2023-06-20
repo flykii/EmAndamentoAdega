@@ -114,7 +114,7 @@ def calcular_preco(request):
 
         precos_venda = {}
         
-        for i in range(15, 46):
+        for i in range(15, 56):
             porcentagem = 1 - (i / 100)
             porcentagens = preco_produto / porcentagem
             preco_venda = f'{porcentagens:.2f}'

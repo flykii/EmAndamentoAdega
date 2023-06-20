@@ -11,14 +11,14 @@
         <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/adega.css' %}" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        {% block importacoes %} 
+        {% endblock %}
 
 
         <!-- Inclua o JavaScript do Bootstrap -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{% static 'js/popper.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
-        {% block importacoes %} 
-        {% endblock %}
 
     </head>
     <body>
@@ -161,9 +161,10 @@
         {% endblock %}
 
         
-            {% block rodape %}
+        {% block rodape %}
+        
 
-            {% endblock %}
+        {% endblock %}
         
 
         {% block extra_js %}
