@@ -266,7 +266,7 @@ def dashboard(request):
     
     
 
-    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+    
 
     context = {
         'data_atual': data_atual,
