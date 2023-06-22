@@ -2,13 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Categoria, Produto, Venda
 from .forms import CategoriaForm, ProdutoForm, FinalizarVendaForm, VendaForm
 from django.contrib import messages
-from django.db.models import Count, Sum
-from django.db.models import Q
-from datetime import datetime
-from django.http import JsonResponse
-from django.core import serializers
+from django.db.models import Sum, Count, F, Func, Q
 from django.utils import timezone
-from django.db.models.functions import TruncDay, TruncMonth
+from django.db.models.functions import TruncDay, TruncMonth, TruncYear
+from datetime import datetime
+from django.db.models import F
+import locale
+from django.utils import timezone
+
 
 
 def categoria_create(request):
@@ -22,16 +23,12 @@ def categoria_create(request):
             categoria.save()
             return redirect('categoria_list')
 
-    return render(request, 'categoria_form.html', {'categoria': categoria})
+    return render(request, 'categoria_form.html', {'categoria': categoria},)
 
-
-
+      
 def categoria_list(request):
     categorias = Categoria.objects.all().order_by('nome')  # Recupera as categorias ordenadas por nome
-    categorias_upper = [categoria.nome.upper() for categoria in categorias]  # Transforma os nomes em maiúsculas
-
-    return render(request, 'categoria_list.html', {'categorias': categorias_upper})
-
+    return render(request, 'categoria_list.html', {'categorias': categorias})
 
 
 def cadastra_atualiza_produto(request, pk=None):
@@ -56,9 +53,11 @@ def cadastra_atualiza_produto(request, pk=None):
 
     return render(request, 'cadastra_atualiza_produto.html', {'form': form})
 
+
 def lista_produtos(request):
     produtos = Produto.objects.all().order_by('-id')
     return render(request, 'lista_produtos.html', {'produtos': produtos})
+
 
 def venda_produto(request):
     carrinho = request.session.get('carrinho', [])
@@ -154,8 +153,7 @@ def finalizar_venda(request):
 
     return render(request, 'finalizar_venda.html', {'form': form, 'total': total})
 
-    
-
+                                       
 def edita_produto(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
     if 'delete' in request.POST:
@@ -171,14 +169,19 @@ def edita_produto(request, pk):
     return render(request, 'edita_produto.html', {'form': form, 'produto': produto})
 
 
-def dashboard(request):
-    forma_pagamento = request.GET.get('forma_pagamento')  # Obter o filtro de forma de pagamento do GET request
-    mes = request.GET.get('mes')  # Obter o filtro de mês do GET request
-    dia = request.GET.get('dia')  # Obter o filtro de dia do GET request
-    venda_filter = Q()  # Iniciar o objeto de filtro vazio
-    custo_total_produtos = calcular_custo_total_produtos()
+class TruncDate(Func):
+    function = 'DATE'
+    arity = 1
 
-    
+
+def dashboard(request):
+    forma_pagamento = request.GET.get('forma_pagamento')
+    mes = request.GET.get('mes')
+    dia = request.GET.get('dia')
+    venda_filter = Q()
+    custo_total_produtos = calcular_custo_total_produtos()
+    data_atual = timezone.now().date()
+
     if dia:
         dia = datetime.strptime(dia, '%Y-%m-%d').day
 
@@ -190,79 +193,113 @@ def dashboard(request):
         venda_filter &= Q(data__day=dia)
 
     vendas_dia = Venda.objects.filter(data=TruncDay(timezone.now())).filter(venda_filter)
-    vendas_mes = Venda.objects.filter(data__gte=timezone.now().replace(day=1)).filter(venda_filter)# valores que você quer adicionar
-    total_vendas_dia = vendas_dia.count()
-    total_vendas_mes = vendas_mes.count()
-    total_itens_vendidos_dia = sum(venda.quantidade for venda in vendas_dia) if vendas_dia.exists() else 0
-    total_itens_vendidos_mes = sum(venda.quantidade for venda in vendas_mes) if vendas_mes.exists() else 0
+    vendas_mes = Venda.objects.filter(data__gte=timezone.now().replace(day=1)).filter(venda_filter)
+    vendas_ano = Venda.objects.filter(data__year=timezone.now().year).filter(venda_filter)
+    vendas_geral = Venda.objects.filter(venda_filter)
 
+    total_vendas_dia = round(vendas_dia.aggregate(total=Sum('total_venda')).get('total') or 0, 2)
+    total_vendas_mes = round(vendas_mes.aggregate(total=Sum('total_venda')).get('total') or 0, 2)
+    total_vendas_ano = round(vendas_ano.aggregate(total=Sum('total_venda')).get('total') or 0, 2)
+    total_vendas_geral = round(vendas_geral.aggregate(total=Sum('total_venda')).get('total') or 0, 2)
 
-    # Item mais vendido e menos vendido (por dia e mês)
-    item_mais_vendido_dia = (
-        vendas_dia.values('produto__nome')
-        .annotate(total=Count('id'))
-        .order_by('-total')
-        .first()
-    )
-    item_menos_vendido_dia = (
-        vendas_dia.values('produto__nome')
-        .annotate(total=Count('id'))
-        .order_by('total')
-        .first()
-    )
-    item_mais_vendido_mes = (
-        vendas_mes.values('produto__nome')
-        .annotate(total=Count('id'))
-        .order_by('-total')
-        .first()
-    )
-    item_menos_vendido_mes = (
-        vendas_mes.values('produto__nome')
-        .annotate(total=Count('id'))
-        .order_by('total')
-        .first()
-    )
-    # Quantidade total de itens vendidos (por dia e mês)
-    quantidade_total_vendida_dia = Venda.objects.filter(venda_filter).count()
-    quantidade_total_vendida_mes = Venda.objects.filter(venda_filter).count()
+    total_itens_vendidos_dia = round(vendas_dia.aggregate(total=Sum('quantidade')).get('total') or 0, 2)
+    total_itens_vendidos_mes = round(vendas_mes.aggregate(total=Sum('quantidade')).get('total') or 0, 2)
+    total_itens_vendidos_ano = round(vendas_ano.aggregate(total=Sum('quantidade')).get('total') or 0, 2)
+    total_itens_vendidos_geral = round(vendas_geral.aggregate(total=Sum('quantidade')).get('total') or 0, 2)
 
-    # Valor total de todas as vendas (por dia e mês)
-    valor_total_vendas_dia = Venda.objects.filter(venda_filter).aggregate(
-        credito=Sum('produto__preco_venda', filter=Q(forma_pagamento='credito')),
-        debito=Sum('produto__preco_venda', filter=Q(forma_pagamento='debito')),
-        pix=Sum('produto__preco_venda', filter=Q(forma_pagamento='pix')),
-        dinheiro=Sum('produto__preco_venda', filter=Q(forma_pagamento='dinheiro'))
-    )
-    valor_total_vendas_mes = Venda.objects.filter(venda_filter).aggregate(
-        credito=Sum('produto__preco_venda', filter=Q(forma_pagamento='credito')),
-        debito=Sum('produto__preco_venda', filter=Q(forma_pagamento='debito')),
-        pix=Sum('produto__preco_venda', filter=Q(forma_pagamento='pix')),
-        dinheiro=Sum('produto__preco_venda', filter=Q(forma_pagamento='dinheiro'))
-    )
+    ticket_medio_dia = round(total_vendas_dia / total_itens_vendidos_dia, 2) if total_itens_vendidos_dia else 0
+    ticket_medio_mes = round(total_vendas_mes / total_itens_vendidos_mes, 2) if total_itens_vendidos_mes else 0
+    ticket_medio_ano = round(total_vendas_ano / total_itens_vendidos_ano, 2) if total_itens_vendidos_ano else 0
+    ticket_medio_geral = round(total_vendas_geral / total_itens_vendidos_geral, 2) if total_itens_vendidos_geral else 0
 
-    # Valor das vendas separados (por dia e mês)
-    valor_vendas_dia = Venda.objects.filter(venda_filter).values('forma_pagamento').annotate(total=Sum('produto__preco_venda'))
-    valor_vendas_mes = Venda.objects.filter(venda_filter).values('forma_pagamento').annotate(total=Sum('produto__preco_venda'))
+    lucro_real = round(vendas_geral.aggregate(total=Sum('produto__lucro_reais')).get('total') or 0, 2)
+    media_itens_vendidos = round(vendas_geral.aggregate(media=Count('produto') * 100 / vendas_geral.count()).get('media') or 0, 2)
+    
+    #total venda DEBITO
+    total_vendas_debito = Venda.objects.filter(forma_pagamento='debito').aggregate(
+        total_vendas_debito=Sum('total_venda')
+    )
+    total_vendas_debito = total_vendas_debito['total_vendas_debito']
+    
+    #total venda CREDITO
+    total_vendas_credito = Venda.objects.filter(forma_pagamento='credito').aggregate(
+        total_vendas_credito=Sum('total_venda')
+    )
+    total_vendas_credito = total_vendas_credito['total_vendas_credito']
+
+    #total venda PIX
+    total_vendas_pix = Venda.objects.filter(forma_pagamento='pix').aggregate(
+        total_vendas_pix=Sum('total_venda')
+    )
+    total_vendas_pix = total_vendas_pix['total_vendas_pix']
+
+    #total venda DINHEIRO
+    total_vendas_dinheiro = Venda.objects.filter(forma_pagamento='dinheiro').aggregate(
+        total_vendas_dinheiro=Sum('total_venda')
+    )
+    total_vendas_dinheiro = total_vendas_dinheiro['total_vendas_dinheiro']
+
+    #total venda CLIENTE
+    total_vendas_cliente = Venda.objects.filter(forma_pagamento='cliente').aggregate(
+        total_vendas_cliente=Sum('total_venda')
+    )
+    total_vendas_cliente = total_vendas_cliente['total_vendas_cliente']
+
+    # Calcula a quantidade total de cada produto vendido
+    produtos = Venda.objects.values('produto__nome').annotate(
+        quantidade_total=Sum('quantidade'),
+        valor_total=Sum('total_venda')
+    ).order_by('-quantidade_total')
+
+    # Pega o produto mais vendido
+    produto_mais_vendido = produtos.first()
+
+    # Pega o produto menos vendido
+    produto_menos_vendido = produtos.last()
+
+    valor_vendas_dia = vendas_dia.values('forma_pagamento').annotate(total=Sum('total_venda'))
+    valor_vendas_mes = vendas_mes.values('forma_pagamento').annotate(total=Sum('total_venda'))
+
+    soma_total_produtos_preco_compra = round(Produto.objects.aggregate(soma=Sum('preco_compra') * F('estoque')).get('soma') or 0, 2)
+    soma_total_produtos_preco_venda = round(Produto.objects.aggregate(soma=Sum('preco_venda') * F('estoque')).get('soma') or 0, 2)
+    soma_total_produtos_lucro_reais = round(Produto.objects.aggregate(soma=Sum('lucro_reais') * F('estoque')).get('soma') or 0, 2)
+    
+    
+
+    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
     context = {
-        'total_vendas_dia': round(total_vendas_dia, 2),
-        'total_vendas_mes': round(total_vendas_mes, 2),
-        'total_itens_vendidos_dia': round(total_itens_vendidos_dia, 2),
-        'total_itens_vendidos_mes': round(total_itens_vendidos_mes, 2),
-        'item_mais_vendido_dia': item_mais_vendido_dia,
-        'item_menos_vendido_dia': item_menos_vendido_dia,
-        'item_mais_vendido_mes': item_mais_vendido_mes,
-        'item_menos_vendido_mes': item_menos_vendido_mes,
-        'quantidade_total_vendida_dia': quantidade_total_vendida_dia,
-        'quantidade_total_vendida_mes': quantidade_total_vendida_mes,
-        'valor_total_vendas_dia': valor_total_vendas_dia,
-        'valor_total_vendas_mes': valor_total_vendas_mes,
+        'data_atual': data_atual,
+        'total_vendas_dia': total_vendas_dia,
+        'total_vendas_mes': total_vendas_mes,
+        'total_vendas_ano': total_vendas_ano,
+        'total_vendas_geral': total_vendas_geral,
+        'total_itens_vendidos_dia': total_itens_vendidos_dia,
+        'total_itens_vendidos_mes': total_itens_vendidos_mes,
+        'total_itens_vendidos_ano': total_itens_vendidos_ano,
+        'total_itens_vendidos_geral': total_itens_vendidos_geral,
+        'ticket_medio_dia': ticket_medio_dia,
+        'ticket_medio_mes': ticket_medio_mes,
+        'ticket_medio_ano': ticket_medio_ano,
+        'ticket_medio_geral': ticket_medio_geral,
+        'lucro_real': lucro_real,
+        'total_vendas_debito': total_vendas_debito,
+        'total_vendas_credito': total_vendas_credito,
+        'total_vendas_pix': total_vendas_pix,
+        'total_vendas_dinheiro': total_vendas_dinheiro,
+        'total_vendas_cliente': total_vendas_cliente,
+        'produto_mais_vendido': produto_mais_vendido,
+         'produto_menos_vendido': produto_menos_vendido,
+
         'valor_vendas_dia': valor_vendas_dia,
         'valor_vendas_mes': valor_vendas_mes,
+        'soma_total_produtos_preco_compra': soma_total_produtos_preco_compra,
+        'soma_total_produtos_preco_venda': soma_total_produtos_preco_venda,
+        'soma_total_produtos_lucro_reais': soma_total_produtos_lucro_reais,
         'custo_total_produtos': custo_total_produtos,
     }
-
     return render(request, 'dashboard.html', context)
+
 
 def calcular_custo_total_produtos():
         produtos = Produto.objects.all()
@@ -279,7 +316,6 @@ def listar_vendas(request):
     return render(request, 'listar_vendas.html', {'vendas': vendas})
 
 
-
 def remover_item_carrinho(request, item_index):
     carrinho = request.session.get('carrinho', [])
     if item_index < len(carrinho):
@@ -289,6 +325,7 @@ def remover_item_carrinho(request, item_index):
         produto.save()
         request.session['carrinho'] = carrinho
     return redirect('venda_produto')
+
 
 def buscar_produto(request):
     query = request.GET.get('q', '')  # Obtém o termo de busca do parâmetro GET 'q'

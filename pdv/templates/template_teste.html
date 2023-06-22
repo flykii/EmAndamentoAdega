@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% load l10n %}
+
+{% block content %}
+    <h1>template_teste</h1>
+    <p>Data atual: {{ data_atual }}</p>
+    <p>Valor total das vendas: R$ {{ total_vendas|floatformat:2|localize }}</p>
+    <p>Valor total das vendas no débito: R$ {{ total_vendas_debito|floatformat:2|localize }}</p>
+    <p>Valor total das vendas no crédito: R$ {{ total_vendas_credito|floatformat:2|localize }}</p>
+    <p>Valor total das vendas no PIX: R$ {{ total_vendas_pix|floatformat:2|localize }}</p>
+    <p>Valor total das vendas em dinheiro: R$ {{ total_vendas_dinheiro|floatformat:2|localize }}</p>
+    <p>Valor total das vendas no cliente: R$ {{ total_vendas_cliente|floatformat:2|localize }}</p>
+    <p>Produto MAIS vendido: {{ produto_mais_vendido.produto__nome }}</p>
+    <p>Quantidade vendida do produto MAIS vendido: {{ produto_mais_vendido.quantidade_total }}</p>
+    <p>Valor total do produto MAIS vendido: R$ {{ produto_mais_vendido.valor_total|floatformat:2|localize }}</p>
+    <p>Produto MENOS vendido: {{ produto_menos_vendido.produto__nome }}</p>
+    <p>Quantidade vendida do produto MENOS vendido: {{ produto_menos_vendido.quantidade_total }}</p>
+    <p>Valor total do produto MENOS vendido: R$ {{ produto_menos_vendido.valor_total|floatformat:2|localize }}</p>
+
+    <p>Valor total das vendas de hoje: R$ {{ total_vendas_hoje|floatformat:2|localize }}</p>
+
+{% endblock %}

@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load l10n %}
 
 {% block importacoes %} 
-<link href="{% static 'css/jonts.css' %}" rel="stylesheet">
+<link href="{% static 'css/dash.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -30,22 +31,23 @@
                             <div class="panel-body">
                                 <small class="social-title"><a href="#"><b><i class="fa-solid fa-cash-register"></i>
                                             Faturamento</b></a></small>
-                                <h3 class="count">R$ 21,20</h3>
-                                <div class="separada"><span>Este mês</span> <span style="float: right;">R$ 21,20</span></div>
-                                <div class="separada"><span>Este ano</span> <span style="float: right;">R$ 102,87</span></div>
-                                <div class="separada"><span>Geral</span> <span style="float: right;">R$ 102,87</span></div>
+                                <h3 class="count">R$ {{ total_vendas_dia }}</h3>
+                                <div class="separada"><span>Este mês</span> <span style="float: right;">R$ {{ total_vendas_mes }}</span></div>
+                                <div class="separada"><span>Este ano</span> <span style="float: right;">R$ {{ total_vendas_ano }}</span></div>
+                                <div class="separada"><span>Geral</span> <span style="float: right;">R$ {{ total_vendas_geral }}</span></div>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="col-lg-3">
                         <div class="panel panel-default twitter">
                             <div class="panel-body">
-                                <small class="social-title"><a href="#"></a><b><i
+                                <small class="social-title"><a href="#"><b><i
                                             class="fa-solid fa-bag-shopping"></i>Vendas</b></a></small>
-                                <h3 class="count"> 0</h3>
-                                <div class="separada"><span>Este mês</span> <span style="float: right;"> </span></div>
-                                <div class="separada"><span>Este ano</span> <span style="float: right;"> 5</span></div>
-                                <div class="separada"><span>Geral</span> <span style="float: right;"> 5</span></div>
+                                <h3 class="count"> R$ {{ total_itens_vendidos_dia }}</h3>
+                                <div class="separada"><span>Este mês</span> <span style="float: right;">R$ {{ total_itens_vendidos_mes }}</span></div>
+                                <div class="separada"><span>Este ano</span> <span style="float: right;">R$ {{ total_itens_vendidos_ano }}</span></div>
+                                <div class="separada"><span>Geral</span> <span style="float: right;">R$ {{ total_itens_vendidos_geral }}</span></div>
                             </div>
                         </div>
                     </div>
@@ -55,10 +57,10 @@
                             <div class="panel-body">
                                 <small class="social-title"><a href="#"><b><i class="fa-solid fa-coins"></i> Ticket
                                             Médio</b></a></small>
-                                <h3 class="count">R$ 0,00</h3>
-                                <div class="separada"><span>Este mês</span> <span style="float: right;">R$ 0,00</span></div>
-                                <div class="separada"><span>Este ano</span> <span style="float: right;">R$ 20,57</span></div>
-                                <div class="separada"><span>Geral</span> <span style="float: right;">R$ 20,57</span></div>
+                                <h3 class="count">R$ {{ ticket_medio_dia }}</h3>
+                                <div class="separada"><span>Este mês</span> <span style="float: right;">R$ {{ ticket_medio_mes }}</span></div>
+                                <div class="separada"><span>Este ano</span> <span style="float: right;">R$ {{ ticket_medio_ano }}</span></div>
+                                <div class="separada"><span>Geral</span> <span style="float: right;">R$ {{ ticket_medio_geral }}</span></div>
                             </div>
                         </div>
                     </div>
@@ -82,6 +84,26 @@
                     <div class="col-lg-3">
                         <div class="panel panel-default twitter">
                             <div class="panel-body">
+                                <small class="social-title"><a href="#"><b>Item Mais Vendido</b></a></small>
+                                <h5 class="count">{{ item_mais_vendido_dia.produto__nome }}</h5>
+                                <div class="separada"><span>Quantidade</span> <span style="float: right;">{{ item_mais_vendido_dia.total }}</span></div>
+                                <div class="separada"><span>Valor</span> <span style="float: right;">R$ {{ item_mais_vendido_dia.valor_total }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-default twitter">
+                            <div class="panel-body">
+                                <small class="social-title"><a href="#"><b>Item Menos Vendido</b></a></small>
+                                <h5 class="count">{{ item_menos_vendido_dia.produto__nome }}</h5>
+                                <div class="separada"><span>Quantidade</span> <span style="float: right;">{{ item_menos_vendido_dia.total }}</span></div>
+                                <div class="separada"><span>Valor</span> <span style="float: right;">R$ {{ valor_total_item_menos_vendido_dia }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-default twitter">
+                            <div class="panel-body">
                                 <small class="social-title"><a href="#"><b>Provisionamento</b></a></small>
                                 <h5 class="count">R$ 2,65</h5>
                                 <div class="separada"><span>Este mês</span> <span style="float: right;">R$ 79,50</span></div>
@@ -94,11 +116,13 @@
                             </div>
                         </div>
                     </div>
+                    
+
                     <div class="col-lg-3">
                         <div class="panel panel-default twitter">
                             <div class="panel-body">
-                                <small class="social-title"><b>Lucroreal</b></small>
-                                <h5 class="count">R$ 0,00 <span style="font-size: 12px;">0,00%</span></h5>
+                                <small class="social-title"><a href="#"><b>Lucroreal</b></a></small>
+                                <h5 class="count">R$ {{ lucro_real }} <span style="font-size: 12px;">{{ media_itens_vendidos }}%</span></h5>
                                 <div class="separada">
                                     <span>Este mês</span> <span style="float: right;">R$ 0,00</span>
                                 </div>
@@ -114,16 +138,103 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="panel-fundo row">
+                    <div class="col-lg-3">
+                        <div class="panel panel-default twitter">
+                            <div class="panel-body">
+                                <small class="social-title"><a href="#"><b><i class="fa-solid fa-cash-register"></i>
+                                            Vendas Credito</b></a></small>
+                                <h3 class="count">R$ {{ total_vendas_credito|floatformat:2|localize }}</h3>
+                                <div class="separada"><span>Este mês</span> <span style="float: right;">R$ {{ total_vendas_credito|floatformat:2|localize }}</span></div>
+                                <div class="separada"><span>Este ano</span> <span style="float: right;">R$ {{ total_vendas_credito|floatformat:2|localize }}</span></div>
+                                <div class="separada"><span>Geral</span> <span style="float: right;">R$ {{ total_vendas_credito|floatformat:2|localize }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3">
+                        <div class="panel panel-default twitter">
+                            <div class="panel-body">
+                                <small class="social-title"><a href="#"><b><i
+                                            class="fa-solid fa-bag-shopping"></i>Vendas Debito</b></a></small>
+                                <h3 class="count"> R$ {{ total_vendas_debito|floatformat:2|localize }}</h3>
+                                <div class="separada"><span>Este mês</span> <span style="float: right;">R$ {{ total_vendas_debito|floatformat:2|localize }}</span></div>
+                                <div class="separada"><span>Este ano</span> <span style="float: right;">R$ {{ total_vendas_debito|floatformat:2|localize }}</span></div>
+                                <div class="separada"><span>Geral</span> <span style="float: right;">R$ {{ total_vendas_debito|floatformat:2|localize }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="col-lg-3">
+                        <div class="panel panel-default twitter">
+                            <div class="panel-body">
+                                <small class="social-title"><a href="#"><b><i class="fa-solid fa-coins"></i>Vendas PIX</b></a></small>
+                                <h3 class="count">R$ {{ total_vendas_pix|floatformat:2|localize }}</h3>
+                                <div class="separada"><span>Este mês</span> <span style="float: right;">R$ {{ total_vendas_pix|floatformat:2|localize }}</span></div>
+                                <div class="separada"><span>Este ano</span> <span style="float: right;">R$ {{ total_vendas_pix|floatformat:2|localize }}</span></div>
+                                <div class="separada"><span>Geral</span> <span style="float: right;">R$ {{ total_vendas_pix|floatformat:2|localize }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="panel panel-default twitter">
+                            <div class="panel-body">
+                                <small class="social-title"><a href="#"><b><i class="fa-solid fa-file-invoice-dollar"></i>Vendas Dinheiro</b></a></small>
+                                <h3 class="count">R$ {{ total_vendas_dinheiro|floatformat:2|localize }}</h3>
+                                <div class="separada"><span>Este mês</span> <span style="float: right;">R$ {{ total_vendas_dinheiro|floatformat:2|localize }}</span></div>
+                                <div class="separada"><span>Este ano</span> <span style="float: right;">R$ {{ total_vendas_dinheiro|floatformat:2|localize }}</span></div>
+                                <div class="separada"><span>Geral</span> <span style="float: right;">R$ {{ total_vendas_dinheiro|floatformat:2|localize }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-fundo row">
+                    <div class="col-lg-3">
+                        <div class="panel panel-default twitter">
+                            <div class="panel-body">
+                                <small class="social-title"><a href="#"><b><i class="fa-solid fa-file-invoice-dollar"></i>Vendas Cliente</b></a></small>
+                                <h3 class="count">R$ {{ total_vendas_cliente|floatformat:2|localize }}</h3>
+                                <div class="separada"><span>Este mês</span> <span style="float: right;">R$ {{ total_vendas_cliente|floatformat:2|localize }}</span></div>
+                                <div class="separada"><span>Este ano</span> <span style="float: right;">R$ {{ total_vendas_cliente|floatformat:2|localize }}</span></div>
+                                <div class="separada"><span>Geral</span> <span style="float: right;">R$ {{ total_vendas_cliente|floatformat:2|localize }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-lg-3">
+                        <div class="panel panel-default twitter">
+                            <div class="panel-body">
+                                <small class="social-title"><a href="#"><b><i class="fa-solid fa-file-invoice-dollar"></i>Produto MAIS Vendido</b></a></small>
+                                <h3 class="count">R$ {{ produto_mais_vendido.produto__nome }}</h3>
+                                <div class="separada"><span>Nome</span> <span style="float: right;">R$ {{ produto_mais_vendido.produto__nome }}</span></div>
+                                <div class="separada"><span>Quantidade</span> <span style="float: right;">R$ {{ produto_mais_vendido.quantidade_total }}</span></div>
+                                <div class="separada"><span>Valor</span> <span style="float: right;">R$ {{ produto_mais_vendido.valor_total|floatformat:2|localize }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-default twitter">
+                            <div class="panel-body">
+                                <small class="social-title"><a href="#"><b><i class="fa-solid fa-file-invoice-dollar"></i>Produto MENOS Vendido</b></a></small>
+                                <h3 class="count">R$ {{ produto_menos_vendido.produto__nome }}</h3>
+                                <div class="separada"><span>Nome</span> <span style="float: right;">R$ {{ produto_menos_vendido.produto__nome }}</span></div>
+                                <div class="separada"><span>Quantidade</span> <span style="float: right;">R$ {{ produto_menos_vendido.quantidade_total }}</span></div>
+                                <div class="separada"><span>Valor</span> <span style="float: right;">R$ {{ produto_menos_vendido.valor_total|floatformat:2|localize }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="panel-fundo row align-items-center justify-content-center">
                     <br>
                     <div style="margin-bottom: 50px; margin-top: 25px ; color: #9dc0df; text-align: center;">
                         "Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento. Reconhece-o em todos
-                        os teus caminhos e ele endireitará as tuas veredas."
+                         os teus caminhos e ele endireitará as tuas veredas."
                     </div>
-                </div>
-                    
-            
+                </div>   
             </div>
+            
             <hr>
 
             <div class="panel-fundo">
@@ -301,7 +412,7 @@
                                 <div class="panel-body">
                                     <small class="social-title"><b>Mês 12/2023</b></small>
                                     <div class="separada"><span>Faturamento </span> <span style="float: right;">R$
-                                            0,00</span></div>
+                                            1000</span></div>
                                     <div class="separada"><span>Despesas</span> <span style="float: right;">R$
                                             0,00</span></div>
                                     <div class="separada"><span>Lucro</span> <span style="float: right;">R$ 0,00</span>
@@ -309,14 +420,15 @@
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
             <hr>
+
             <div class="panel-fundo">
+                <div class="panel-padrao">Analise Geral
+                    <span class="pull-right"></span>
+                </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="panel panel-default twitter">
@@ -332,27 +444,26 @@
                         </div>
                     </div>
 
-
-
                     <div class="col-lg-6">
                         <div class="panel panel-default twitter">
                             <div class="panel-body">
                                 <small class="social-title"><b>Geral</b></small>
-                                <div class="separada"><span>Faturamento </span> <span style="float: right;">R$
-                                        137,57</span></div>
-                                <div class="separada"><span>Despesas</span> <span style="float: right;">R$ 385,00</span>
+                                <div class="separada"><span>Faturamento Preco Compra </span> <span style="float: right;">R$
+                                    {{ soma_total_produtos_preco_compra }}</span></div>
+                                <div class="separada"><span>Faturamento Preço Venda</span> <span style="float: right;">R$ {{ soma_total_produtos_preco_venda }}</span>
                                 </div>
-                                <div class="separada"><span>Lucro</span> <span style="float: right;">R$ -247,43</span>
+                                <div class="separada"><span>Lucro total</span> <span style="float: right;">R$ {{ soma_total_produtos_lucro_reais }}</span>
+                                </div>
+                                <div class="separada"><span>Retorno total</span> <span style="float: right;">R$ {{ custo_total_produtos }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
                 </div>
             </div>
-
         </div>
+    </div>
     <br>
     <br>
     <br>

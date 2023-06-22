@@ -11,14 +11,12 @@
     <form method="post" id="produto-form">
         {% csrf_token %}
         {% for field in form %}
-        {% if field.name != 'quantidade_na_camarafria' %}
-        
-        <div>
-            {{ field.label_tag }}
-            {{ field }}
-        </div>
-
-        {% endif %}
+            {% if field.name != 'quantidade_na_camarafria' %}
+                <div>
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+            {% endif %}
         {% endfor %}
         <div id="quantidade-na-camarafria" style="display: none;">
             <label for="{{ form.quantidade_na_camarafria.auto_id }}">Quantidade na câmara fria:</label>

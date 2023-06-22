@@ -1,16 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- Esta é a classe principal do Bootstrap para centrar e alinhar o conteúdo -->
-<div class="container my-4">
-    <h2 class="display-4">Categorias</h2>
-    <a class="btn btn-primary" href="{% url 'categoria_create' %}">Adicionar Categoria</a>
-    <ul class="list-group">
-        {% for categoria in categorias %}
-        <li class="list-group-item">{{ categoria.nome }}</li>
-        {% endfor %}
-    </ul>
-</div>
-
-    {% endblock %}
+    <!-- Esta é a classe principal do Bootstrap para centrar e alinhar o conteúdo -->
+    <div class="container my-4">
+        <h2 class="display-4">Categorias</h2>
+        <a class="btn btn-primary" href="{% url 'categoria_create' %}">Adicionar Categoria</a>
+        <ul class="list-group">
+            {% for categoria in categorias %}
+                <li class="list-group-item">{{ categoria.nome }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
     
