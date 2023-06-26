@@ -8,10 +8,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Sistema</title>
         <!-- Inclua o CSS do Bootstrap -->
-        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-        <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/adega.css' %}" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{% static 'css/cliente/cliente.css' %}">
+        <link rel="stylesheet" href="{% static 'css/cliente/cliente2.css' %}">
+        <link rel="stylesheet" href="{% static 'css/dash.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/e263f91f52.js" crossorigin="anonymous"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        
         {% block importacoes %} 
         {% endblock %}
 
@@ -57,6 +63,7 @@
 
                                         <a class="dropdown-item" href="{% url 'user_create' %}">Usuários</a>
                                         <a class="dropdown-item" href="{% url 'cadastra_atualiza_produto' %}">Produto</a>
+                                        <a class="dropdown-item" href="{% url 'cadastrar_cliente' %}">Cliente</a>
                                         <a class="dropdown-item" href="{% url 'categoria_create' %}">Categoria</a>
                                         
 
@@ -74,6 +81,7 @@
                                         <a class="dropdown-item" href="{% url 'user_list' %}">Usuários</a>
                                     {% endif %}
                                     <a class="dropdown-item" href="{% url 'categoria_list' %}">Categoria</a>
+                                    <a class="dropdown-item" href="{% url 'lista_cliente' %}">Clientes</a>
                                     <a class="dropdown-item" href="{% url 'lista_produtos' %}">Produtos</a>
                                     <a class="dropdown-item" href="{% url 'listar_vendas' %}">Vendas</a>
 
@@ -160,13 +168,15 @@
         {% block content %}
     
         {% endblock %}
-
-        
-        {% block rodape %}
-        
-
-        {% endblock %}
-        
+            <footer style="flex-shrink: 0;">
+                <div class="panel-fundo rod">
+                    <nav class="panel">
+                        <span class="lead tag-a">São Sebastião do Paraíso roda pe BASE</span><br>
+                        <span class="tag-a">Desenvolvido por Jonatas e Guilherme</span>
+                        <span class="tag-a"><p class="in-line">&copy; 2023 PDV Venda de Produtos</p></span>
+                    </nav>
+                </div>
+            </footer>
 
         {% block extra_js %}
 

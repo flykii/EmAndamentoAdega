@@ -1,42 +1,55 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block importacoes %} 
-<link rel="stylesheet" href="{% static 'css/listar_usuario.css' %}"> 
+{% block importacoes %}
+<link rel="stylesheet" href="{% static 'css/cliente/cliente.css' %}">
+<link rel="stylesheet" href="{% static 'css/cliente/cliente2.css' %}">
+<link rel="stylesheet" href="{% static 'css/dash.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<script src="https://kit.fontawesome.com/e263f91f52.js" crossorigin="anonymous"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 {% endblock%}
 
 {% block content %}
-<br>
-<h2>Lista de usuários</h2>
-<div class="l">
-  <a href="{% url 'user_create' %}" class="btn btn-primary btn-sm float-right">Cadastrar novo usuário</a>
+<div class="templatemo-content">
+  <div class="panel panel-fundo d-flex align-items-center justify-content-between">
+    <h1>Lista de usuários</h1>
+    <div>
+        <span class="mr-2">
+          <a href="{% url 'user_create' %}"><i class="fa fa-plus"></i> Novo usuário</a>
+        </span>
+    </div>
+  </div>
+  {% if request.user.user_type == "ADMIN" or "GERENTE" %}
+  <div class="panel panel-default">
+    <div class="tabela panel-body">
+      <table id="app" class="sua-tabela table-hover">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Perfil usuário</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in object_list %}
+          <tr>
+            <td><i class="fa-solid fa-user"></i> <b>{{ user.username }}</b></td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.get_user_type_display }}</td>
+            <td>
+              <a class="btn btn-outline-warning btn-sm" href="{% url 'user_update' user.pk %}"><i class="fas fa-pencil-alt"
+                  style="color: rgba(216, 174, 66, 0.932);"></i></a>
+              <a class="btn btn-outline-danger btn-sm" href="{% url 'user_delete' user.pk %}"><i class="fa fa-times"
+                  style="color: rgba(170, 9, 9, 0.959);"></i></a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
-
-<br>
-<br>
-{% if request.user.user_type == "ADMIN" or "GERENTE" %}
-  <table id="app" class="table table-striped table-hover table-condensed">
-    <thead>
-      <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Perfil usuário</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for user in object_list %}
-      <tr>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.get_user_type_display }}</td>
-        <td>
-          <a href="{% url 'user_update' user.pk %}"></i>Editar</a>
-          <a href="{% url 'user_delete' user.pk %}">Excluir</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
 {% endif %}
 {% endblock %}

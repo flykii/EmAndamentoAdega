@@ -7,8 +7,9 @@ from django.utils import timezone
 from django.db.models.functions import TruncDay, TruncMonth, TruncYear
 from datetime import datetime
 from django.db.models import F
-import locale
 from django.utils import timezone
+from cliente.models import Cliente
+from decimal import Decimal
 
 
 
@@ -59,6 +60,7 @@ def lista_produtos(request):
     return render(request, 'lista_produtos.html', {'produtos': produtos})
 
 
+
 def venda_produto(request):
     carrinho = request.session.get('carrinho', [])
     total = 0
@@ -72,8 +74,8 @@ def venda_produto(request):
             subtotal = float(produto.preco_venda) * quantidade
             # Atualizando o estoque
             produto.atualizar_estoque(quantidade)
-           
-            if produto.camara_fria and produto.quantidade_na_camarafria  and produto.quantidade_atual_camarafria is not None:
+
+            if produto.camara_fria and produto.quantidade_na_camarafria and produto.quantidade_atual_camarafria is not None:
                 produto.quantidade_atual_camarafria = max(0, produto.quantidade_na_camarafria - quantidade)
                 produto.save()
 
@@ -84,7 +86,7 @@ def venda_produto(request):
                 'preco': float(produto.preco_venda),
                 'subtotal': subtotal
             }
-            carrinho.append(item_carrinho)
+            carrinho.insert(0, item_carrinho)
             request.session['carrinho'] = carrinho
 
             # Criar nova instância de Venda e salvar no banco de dados
@@ -94,14 +96,17 @@ def venda_produto(request):
             # Adicionar id da venda ao item do carrinho
             item_carrinho['venda_id'] = venda.id
 
-
-    for item in carrinho:  
+    for item in carrinho:
         total += item['subtotal']
 
-    form = VendaForm()  
+    form = VendaForm()
     pagamento_form = FinalizarVendaForm() if request.session.get('carrinho') else None
 
-    return render(request, 'venda_produto.html', {'form': form, 'carrinho': carrinho, 'total': total, 'pagamento_form': pagamento_form})
+    # Obter todos os clientes
+    clientes = Cliente.objects.all().order_by('-id')
+
+    return render(request, 'venda_produto.html', {'form': form, 'carrinho': carrinho, 'total': total, 
+                                                  'pagamento_form': pagamento_form, 'clientes': clientes})
 
 
 def finalizar_venda(request):
@@ -119,39 +124,52 @@ def finalizar_venda(request):
         form = FinalizarVendaForm(request.POST)
         if form.is_valid():
             forma_pagamento = form.cleaned_data['forma_pagamento']
-            # Adicione esta linha para obter o valor_recebido, mesmo que seja None
             valor_recebido = form.cleaned_data.get('valor_recebido')
+            cliente = form.cleaned_data.get('cliente')  # Obter o cliente selecionado diretamente
+
             for item in carrinho:
-                # Buscar a venda usando o id da venda em vez do id do produto
                 venda = Venda.objects.get(id=item['venda_id'])
                 venda.forma_pagamento = forma_pagamento
+                venda.cliente = cliente
                 venda.data_venda = timezone.now()
                 venda.save()
-            
+
             if forma_pagamento == 'dinheiro':
                 if valor_recebido is None or valor_recebido < total:
                     messages.error(request, 'Valor recebido insuficiente')
+                    return redirect('finalizar_venda')
                 else:
                     troco = valor_recebido - total
                     messages.success(request, f'Troco: R${troco:.2f}')
-                    for item in carrinho:
-                        venda = Venda.objects.get(id=item['venda_id'])
+            elif forma_pagamento == 'cliente':
+                if cliente is None:
+                    messages.error(request, 'Selecione um cliente')
+                    return redirect('finalizar_venda')
+                else:
+                    # Atualizar o limite de compras do cliente
+                    if total > cliente.limite_compras:
+                        messages.error(request, 'O valor total ultrapassa o limite de compras do cliente')
+                        return redirect('finalizar_venda')
+                    else:
+                        cliente.limite_compras -= Decimal(total)
 
-                        venda.forma_pagamento = forma_pagamento
-                        venda.save()
-                    request.session['carrinho'] = []
-                    return redirect('venda_produto')
-            else:
-                for item in carrinho:
-                    venda = Venda.objects.get(id=item['venda_id'])
+                        cliente.save()
 
-                    venda.forma_pagamento = forma_pagamento
-                    venda.save()
-                messages.success(request, 'Venda finalizada com sucesso')
-                request.session['carrinho'] = []
-                return redirect('venda_produto')
+            for item in carrinho:
+                venda = Venda.objects.get(id=item['venda_id'])
+                venda.forma_pagamento = forma_pagamento
+                venda.save()
 
+            request.session['carrinho'] = []
+            messages.success(request, 'Venda finalizada com sucesso')
+            return redirect('venda_produto')
+
+    form = FinalizarVendaForm()
     return render(request, 'finalizar_venda.html', {'form': form, 'total': total})
+
+
+
+
 
                                        
 def edita_produto(request, pk):

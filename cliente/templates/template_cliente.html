@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block importacoes %}
+<link rel="stylesheet" href="{% static 'css/cliente/cliente2.css' %}">
+<link rel="stylesheet" href="{% static 'css/dash.css' %}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="panel panel-fundo">
+        <span style="float: right;">
+            <a href="{% url 'lista_cliente' %}"></i>Lista de cliente</a>
+        </span>
+        <h2 class="header">{% if form.instance.pk %}Editar Cliente{% else %}Novo Cliente{% endif %}</h2>
+    </div>
+    <div class="panel panel-default panel-fundo">
+        <div class="panel-body">
+            <div class="d-flex justify-content-between">
+                <form action="{% if cliente_id %}{% url form_action_url cliente_id %}{% else %}{% url form_action_url %}{% endif %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>{{ form.nome.label }}</label>
+                        {{ form.nome }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.sobrenome.label }}</label>
+                        {{ form.sobrenome }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.cpf.label }}</label>
+                        {{ form.cpf }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.limite_compras.label }}</label>
+                        {{ form.limite_compras }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.telefone.label }}</label>
+                        {{ form.telefone }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.endereco.label }}</label>
+                        {{ form.endereco }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.foto_cliente.label }}</label>
+                        {{ form.foto_cliente }}
+                    </div>
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary" name="btn_add"><i class="fa fa-plus"> </i> {% if form.instance.pk %}Salvar Alterações{% else %}Cadastrar{% endif %}</button>
+                </form>
+                {% if form.instance.pk and form.instance.foto_cliente %}
+                    <div class="d-flex align-items-center">
+                        <img src="{{ form.instance.foto_cliente.url }}" alt="Foto do cliente" style="width:200px;height:200px;">
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#id_telefone').mask('(00) 0-0000-0000');
+    });
+</script>
+{% endblock %}

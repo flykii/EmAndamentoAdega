@@ -1,5 +1,7 @@
 from django import forms
 from .models import Produto, Categoria, Venda
+from cliente.models import Cliente  
+
 
 class CategoriaForm(forms.ModelForm):
     class Meta:
@@ -29,6 +31,7 @@ class VendaForm(forms.Form):
 class FinalizarVendaForm(forms.Form):    
     forma_pagamento = forms.ChoiceField(choices=Venda.FORMAS_PAGAMENTO, widget=forms.RadioSelect)
     valor_recebido = forms.FloatField(required=False, min_value=0, widget=forms.NumberInput(attrs={'class': 'dinheiro'}))
+    cliente = forms.ModelChoiceField(queryset=Cliente.objects.all(), required=False)
 
 
 

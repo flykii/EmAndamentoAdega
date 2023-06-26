@@ -1,15 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
+
+
+{% block importacoes %}
+<title>Lista || clientes</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="{% static 'css/cliente/cliente.css' %}">
+<link rel="stylesheet" href="{% static 'css/cliente/cliente2.css' %}">
+<link rel="stylesheet" href="{% static 'css/dash.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+<script src="https://kit.fontawesome.com/e263f91f52.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+
 
 {% block content %}
     <!-- Esta é a classe principal do Bootstrap para centrar e alinhar o conteúdo -->
-    <div class="container my-4">
-        <h2 class="display-4">Categorias</h2>
-        <a class="btn btn-primary" href="{% url 'categoria_create' %}">Adicionar Categoria</a>
-        <ul class="list-group">
-            {% for categoria in categorias %}
-                <li class="list-group-item">{{ categoria.nome }}</li>
-            {% endfor %}
-        </ul>
+    <div class="templatemo-content">
+        <div class="panel panel-fundo d-flex align-items-center justify-content-between">
+            <h1>Categorias</h1>
+            <div>
+                <span class="mr-2">
+                    <a href="{% url 'categoria_create' %}"><i class="fa fa-plus"></i>Nova Categoria</a>
+                </span>
+            </div>       
+        </div>       
+        <div class="panel panel-default">
+            <div class="tabela panel-body ">
+                <table class="sua-tabela table-hover"> 
+                    <thead>
+                        <tr>
+                            <th>Categorias</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for categoria in categorias %}
+                        <tr>
+                            <td>
+                                {{ categoria.nome }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}
+
+
     

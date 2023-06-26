@@ -1,41 +1,63 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block importacoes %}
+<title>Lista || clientes</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="{% static 'css/cliente/cliente.css' %}">
+<link rel="stylesheet" href="{% static 'css/cliente/cliente2.css' %}">
+<link rel="stylesheet" href="{% static 'css/dash.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<script src="https://kit.fontawesome.com/e263f91f52.js" crossorigin="anonymous"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+{% endblock %}
+
 
 {% block content %}
-<div class="container">
-    <h1 style="text-align:center" >Lista de Produtos</h1>
-  <form role="search" method="GET"  action="{% url 'buscar_produto' %}">
-      <input type="seach" name="q" id="busca"   placeholder="Busque aqui!">
-      <button class="btn btn-success" >Buscar</button>
-      <a class="btn btn-light" href="{% url 'lista_produtos' %}">limpar</a>
-  </form>
-    <div class="table">
-        <table class="table table-striped table-hover table-condensed" id="tabela_produtos">
-            <thead>
-                <tr>
-                    <th>Descrição</th>
-                    <th>Preço venda</th>
-                    {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
+<div class="templatemo-content">
+    <div class="panel panel-fundo d-flex align-items-center justify-content-between">
+        <h1>Lista de Produtos</h1>
+        <div>
+            <span class="mr-2">
+                <a href="{% url 'cadastrar_cliente' %}"><i class="fa fa-plus"></i>Novo Produto</a>
+            </span>
+            <form role="search" method="GET" action="{% url 'buscar_produto' %}" class="d-inline-block">
+                <input type="search" name="q" id="busca" placeholder="Busque aqui!">
+                <button class="btn btn-success">Buscar</button>
+                <a class="btn btn-light" href="{% url 'lista_produtos' %}">Limpar</a>
+            </form>
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+        <div class="tabela panel-body">
+            <table class="sua-tabela table-hover " id="tabela_produtos">
+                <thead>
+                    <tr>
+                        <th width="30%">Descrição</th>
+                        <th>Preço venda</th>
+                        {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
                         <th>Preço compra</th>
                         <th>Porcentagem </th>
                         <th>Lucro em reais</th>
-                    {% endif %}        
-                    <th>Estoque</th>
-                    <th>Categoria</th>
-                    <th>Camara fria</th>
-                    {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
-                        <th>Ações</th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for produto in produtos %}
+                        {% endif %}        
+                        <th>Estoque</th>
+                        <th>Categoria</th>
+                        <th>Camara fria</th>
+                        {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
+                        <th width="6%">Ações</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in produtos %}
                     <tr class="produto">
                         <td>{{ produto.descricao }}</td>
                         <td>{{ produto.preco_venda }}</td>
                         {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}
-                            <td>{{ produto.preco_compra }}</td>
-                            <td>{{ produto.porcentagem_lucro }} %</td>
-                            <td>{{ produto.lucro_reais }} </td>
+                        <td>{{ produto.preco_compra }}</td>
+                        <td>{{ produto.porcentagem_lucro }} %</td>
+                        <td>{{ produto.lucro_reais }} </td>
                         {% endif %}          
                         <td>{{ produto.estoque }}</td>
                         <td>{{ produto.categoria.nome }}</td>
@@ -48,17 +70,20 @@
                                 Repor {{ produto.diferenca_quantidade }}
                             {% endif %}
                         </td>
-                        {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}                                      
-                            <td>
-                                <a class="btn btn-outline-warning btn-sm" href="{% url 'edita_produto' produto.id %}">Editar</a>
-                                <a class="btn btn-outline-danger btn-sm" href="{% url 'edita_produto' produto.id %}">Excluir</a>
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-      </table>
-    </div>
+                            {% if request.user.user_type|stringformat:'s' == "ADMIN" or request.user.user_type|stringformat:'s' == "GERENTE" %}                                      
+                        <td>
+                            <a class="btn btn-outline-warning btn-sm" href="{% url 'edita_produto' produto.id %}"><i class="fas fa-pencil-alt"
+                                style="color: rgba(204, 164, 61, 0.918);"></i></a>
+                                <a class="btn btn-outline-danger btn-sm" href="{% url 'edita_produto' produto.id %}"><i class="fa fa-times"
+                                    style="color: rgba(170, 9, 9, 0.959);"></i></a>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 </div>
 {% endblock %}
 
@@ -97,4 +122,3 @@
         });
     </script>
 {% endblock %}
-

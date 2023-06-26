@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+
+{% block importacoes %}
+<title>Lista || clientes</title>
+{% endblock %}
+
+
+{% block content %}
+<div class="templatemo-content">
+  <div class="panel panel-fundo d-flex align-items-center justify-content-between">
+    <h1>Lista de Clientes</h1>
+    <div>
+      <span class="mr-2">
+        <a href="{% url 'cadastrar_cliente' %}"><i class="fa fa-plus"></i>Novo cliente</a>
+      </span>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="tabela panel-body ">
+      <table class="sua-tabela table-hover">
+        <thead>
+          <tr>
+            <th width="13%">Nome</th>
+            <th width="13%">Cpf</th>
+            <th width="13%">Telefone</th>
+            <th width="12%">Endereco</th>
+            <th width="13%">Limite</th>
+            <th width="12%">Status</th>
+            <th width="5%">Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cliente in clientes %}
+          <tr>
+            <td><b><i class="fa-solid fa-user"></i>{{ cliente.nome }}</b></td>
+            <td>
+              <span class="label label-warning">{{ cliente.cpf|formatar_cpf }}</span>
+            </td>
+            <td>
+              <span class="label label-warning">{{ cliente.telefone|formatar_telefone }}</span>
+            </td>
+            <td>
+              <span class="label label-warning">{{ cliente.endereco }}</span>
+            </td>
+            <td>
+              <!-- Botão para acionar o modal -->
+              <button type="button" class="btn btn-link" data-toggle="modal"
+                data-target="#addValueModal-{{ cliente.id }}">
+                <span class="label label-warning">R$ {{ cliente.limite_compras }} / {{ cliente.limite_compras_maximo }}
+                </span>
+              </button>
+
+              <!-- Exemplo de um modal com um formulário para adicionar valor ao limite de compras -->
+              <div class="modal fade" id="addValueModal-{{ cliente.id }}" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document" style=" max-width: 36%;">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title"><b style="color: #009919;">Receber Divida</b> | <b style="color: #d49828;">Alterar limite</b></h4>
+                    </div>
+                    <div class="modal-body">
+                      <form method="post" action="{% url 'add_value_to_limit' cliente.id %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                          <label for="addValue"><b>Valor a ser Computado</b></label>
+                          <input type="number" class="form-control" id="addValue" name="add_value">
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-danger btn-sm" name="action" value="add_venda">Adicionar venda</button>
+                          <button type="submit" class="btn btn-success btn-sm" name="action" value="pagar">Receber Dívida</button>
+                          <button type="submit" class="btn btn-warning btn-sm" name="action" value="alterar_limite">Alterar Limite</button>
+                          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Fechar</button>
+                        </div>
+                      </form>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              {% if cliente.limite_compras <= 10 %} <span class="badge badge-danger">Bloqueado</span>
+                {% elif cliente.limite_compras > 10 and cliente.limite_compras <= 80 %} <span
+                  class="badge badge-warning">Próximo do Limite</span>
+                  {% else %}
+                  <span class="badge bg-success text-dark">Ativo</span>
+                  {% endif %}
+            </td>
+
+            <td>
+              <a class="btn btn-outline-warning btn-sm" href="{% url 'editar_cliente' cliente.id %}" title="Edit"><i class="fas fa-pencil-alt"
+                  style="color: rgba(216, 174, 66, 0.932);"></i></a>
+              <a class="btn btn-outline-danger btn-sm" href="{% url 'deletar_cliente' cliente.id %}"><i class="fa fa-times"
+                  style="color: rgba(170, 9, 9, 0.959);"></i></a>
+            </td>
+          </tr>
+          {% endfor %}
+
+          </tbody>
+      </table>
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+    </div>
+  </div>
+</div>
+{% endblock %}

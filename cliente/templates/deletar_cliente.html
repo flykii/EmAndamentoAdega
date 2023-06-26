@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block importacoes %}
+<title>deletar || clientes</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="{% static 'css/cliente/cliente.css' %}">
+<link rel="stylesheet" href="{% static 'css/dash.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div class="templatemo-content ">
+        <div class="panel panel-fundo">
+            <h1>Deletar Cliente</h1>
+        </div>
+        <div class="panel panel-default">
+            
+            <p style="color: rgba(255, 220, 23, 0.945)">Tem certeza que deseja deletar {{ cliente.nome }}?</p>
+            <h2>DELETAR - {{ cliente.nome }} {{ cliente.sobrenome }}</h2>
+            <br>
+            <form method="post">
+                {% csrf_token %}
+                <button class="btn-danger" type="submit">Sim, deletar</button>
+            </form>
+            <br>
+            <a class="btn-primary" href="{% url 'lista_cliente' %}">Cancelar</a>
+        </div>  
+    </div>
+{% endblock %}

@@ -1,45 +1,67 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block importacoes %}
+<title>Lista || clientes</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="{% static 'css/cliente/cliente.css' %}">
+<link rel="stylesheet" href="{% static 'css/cliente/cliente2.css' %}">
+<link rel="stylesheet" href="{% static 'css/dash.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<script src="https://kit.fontawesome.com/e263f91f52.js" crossorigin="anonymous"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+{% endblock %}
+
+
 {% block content %}
-<div class="container">
-    <h2>Vendas Realizadas</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Vendedor</th>
-                <th>Data</th>
-                <th>Hora</th>
-                <th>Produto</th>
-                <th>Preco Un.</th>
-                <th>Quantidade</th>
-                <th>Forma de pagamento</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for venda in vendas %}
-                <tr>
-                    <td>{{ venda.vendedor }}</td>
-                    <td>{{ venda.data|date:"d/m/Y" }}</td>
-                    <td>{{ venda.data|time:"H:i" }}</td>
-                    <td>{{ venda.produto }}</td>
-                    <td>{{ venda.preco_venda }}</td>
-                    <td>{{ venda.quantidade }}</td>
-                    <td>{{ venda.forma_pagamento }}</td>
-                    <td>{{ venda.total_venda }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <hr>
-    <br>
-    aki
-    {{ vendas.forma_pagamento }}
-    {{ vendas.id }}
-    <hr>
-    <br>
-    {{ vendas }}
+<div class="templatemo-content">
+    <div class="panel panel-fundo d-flex align-items-center justify-content-between">
+      <h1>Vendas Realizadas</h1>
+      <div>
+          <span class="mr-2">
+            <a href="{% url 'user_create' %}"><i class="fa fa-plus"></i> Novo Venda</a>
+          </span>
+      </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="tabela panel-body">
+            <table id="app" class="sua-tabela table-hover">
+                <thead>
+                    <tr>
+                        <th>Vendedor</th>
+                        <th>Data</th>
+                        <th width="6%">Hora</th>
+                        <th>Produto</th>
+                        <th>Preco Un.</th>
+                        <th>Quantidade</th>
+                        <th >Forma de pagamento</th>
+                        <th>Total</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venda in vendas %}
+                        <tr>
+                            <td>{{ venda.vendedor }}</td>
+                            <td>{{ venda.data|date:"d/m/Y" }}</td>
+                            <td>{{ venda.data|time:"H:i" }}</td>
+                            <td>{{ venda.produto }}</td>
+                            <td>{{ venda.preco_venda }}</td>
+                            <td>{{ venda.quantidade }}</td>
+                            <td>{{ venda.forma_pagamento }}</td>
+                            <td>{{ venda.total_venda }}</td>
+                            <td>
+                                <a class="btn btn-outline-warning btn-sm" href="#" title="Edit"><i class="fas fa-pencil-alt"
+                                    style="color: rgba(216, 174, 66, 0.932);"></i></a>
+                                <a class="btn btn-outline-danger btn-sm" href="#"><i class="fa fa-times"
+                                    style="color: rgba(170, 9, 9, 0.959);"></i></a>
+                              </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-<br>
-<br>
 <br>
 {% endblock %}
