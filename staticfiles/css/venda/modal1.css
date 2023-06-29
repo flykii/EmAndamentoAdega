@@ -1,0 +1,447 @@
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	padding-top: 100px;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+}
+
+/*    TESTANDO CSS DAQUI PARA BAIXO APAGAR DEPOIS
+
+
+/* Create a custom checkbox */
+.checkmark {
+	position: relative;
+	top: 0;
+	left: 0;
+	height: 1.3em;
+	width: 1.3em;
+	background: black;
+	border-radius: 50px;
+	transition: all 0.7s;
+	--spread: 20px;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked~.checkmark {
+	background: black;
+	box-shadow: -10px -10px var(--spread) 0px #5B51D8, 0 -10px var(--spread) 0px #833AB4, 10px -10px var(--spread) 0px #E1306C, 10px 0 var(--spread) 0px #FD1D1D, 10px 10px var(--spread) 0px #F77737, 0 10px var(--spread) 0px #FCAF45, -10px 10px var(--spread) 0px #FFDC80;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+	content: "";
+	position: absolute;
+	display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked~.checkmark:after {
+	display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+	left: 0.45em;
+	top: 0.25em;
+	width: 0.25em;
+	height: 0.5em;
+	border: solid #f0f0f0;
+	border-width: 0 0.15em 0.15em 0;
+	transform: rotate(45deg);
+}
+/* ==========================================================================
+ 	Global
+ ========================================================================== */
+ .img-bordered {
+	border: 3px solid #E8E8E8;
+	padding: 2px;
+}
+
+html,
+body {
+	font-family: "roboto";
+	font-weight: 400;
+	color: #6f6f6f;
+	overflow-x: hidden;
+	-webkit-font-smoothing: antialiased;
+	background: #cdd0f3 !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: 'Segoe UI', Tahoma, sans-serif;
+	font-weight: normal;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+a {
+	font-family: 'Segoe UI', Tahoma, sans-serif;
+	color: green;
+}
+
+a,
+a:hover,
+a:focus,
+input:focus {
+	text-decoration: none;
+	outline: none;
+	color: green;
+}
+
+img {
+	max-width: 100%;
+}
+
+section {
+	min-width: 100%;
+	position: relative;
+	width: 100%;
+	padding: 5px 0;
+}
+
+
+
+p {
+	font-size: 12px;
+}
+
+.form-control:focus {
+	border-color: #00a651;
+}
+
+.form-pesquisa {
+	padding: 20px;
+	border-radius: 100px;
+	font-size: 20px;
+	text-align: center;
+	width: 70%;
+	color: green;
+}
+
+.form-pesquisa2 {
+	padding: 20px;
+	border-radius: 100px;
+	font-size: 20px;
+	text-align: left;
+	color: green;
+	border: none;
+	width: 100%;
+}
+
+.pesquisa {
+	background: #fff;
+	border-radius: 100px;
+	border: solid 2px #06da0b;
+}
+
+.bcon {
+	float: right;
+	z-index: 1000;
+	position: relative;
+}
+
+.title {
+	line-height: 34px;
+	color: #000;
+	font-family: 'Segoe UI', Tahoma, sans-serif;
+	font-weight: 700;
+}
+
+.titulo2 {
+	font-size: 16px;
+	padding: 5px;
+	color: #969796;
+}
+
+.titulo3 {
+	font-size: 20px;
+	color: #24dcb3;
+}
+
+.titulo4 {
+	color: #000;
+}
+
+.titulo5 {
+	color: #000;
+	font-size: 3em;
+	margin-bottom: 20px;
+}
+
+.titulo_azul {
+	color: #097ef7;
+	font-size: 30px;
+	padding: 5px;
+}
+
+.titulo_laranjo {
+	color: #fa7d03;
+	font-size: 30px;
+	padding: 5px;
+}
+
+.titulo_verde {
+	color: #05d305;
+	font-size: 30px;
+	padding: 5px;
+}
+
+.titulo_left {
+	font-size: 60px;
+	float: left;
+}
+
+.titulo_right {
+	float: right;
+}
+
+.titulo_right_verde {
+	float: right;
+	color: #05d305;
+}
+
+.corpo_quadro {
+	padding: 20px 25px;
+	background: #fff;
+	border-radius: 20px;
+	margin: 5px;
+	box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+}
+
+.corpo_quadro2 {
+	padding: 20px 25px;
+	background: #fff;
+	border-radius: 5px;
+	margin: 5px;
+	box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+}
+
+.corpo_quadro3 {
+	padding: 20px 25px;
+	background: #fff;
+	border-radius: 20px;
+	margin: 5px;
+	box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+}
+
+.corpo_quadro3:hover {
+	background: #26eabf;
+	color: #000;
+}
+
+.sobre_posta {
+	position: fixed;
+	z-index: 1000;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	padding: 15px;
+	background: rgb(0 0 0 / 30%);
+	display: block;
+	overflow: hidden;
+}
+
+.sobre_posta2 {
+	position: fixed;
+	z-index: 9999;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	height: 300px;
+	width: 300px;
+	padding: 15px;
+	padding-top: 50px;
+	padding-bottom: 20px;
+	border: solid 2px #eee;
+	font-size: 20px;
+	border-radius: 5px;
+	background: #fff;
+	display: block;
+	overflow: hidden;
+	color: red;
+}
+
+.sobre_posta3 {
+	position: fixed;
+	z-index: 9999;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	height: 300px;
+	width: 300px;
+	padding: 15px;
+	padding-top: 50px;
+	padding-bottom: 20px;
+	border: solid 2px #eee;
+	font-size: 20px;
+	border-radius: 5px;
+	background: #fff;
+	display: block;
+	overflow: hidden;
+	color: #0acd0a;
+}
+
+.sobre_posta4 {
+	position: fixed;
+	z-index: 9999;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	height: 80%;
+	width: 80%;
+	padding: 15px;
+	padding-top: 50px;
+	padding-bottom: 20px;
+	border: solid 2px #eee;
+	font-size: 20px;
+	border-radius: 5px;
+	background: #fff;
+	display: block;
+	overflow: hidden;
+	color: #000;
+}
+
+.link_referidos {
+	border: none;
+	width: 100%;
+	padding: 20px;
+	font-size: 16px;
+	border-radius: 10px;
+}
+
+.espacamento {
+	margin-bottom: 10%;
+}
+
+.espacamento_2 {
+	padding-bottom: 50px;
+	margin-top: 2%;
+}
+
+.numeros_como_funciona {
+	font-size: 40px;
+	color: #06da0b;
+	background: #000;
+	border-radius: 200px 100px 1000px 0px;
+	margin-left: -25px;
+	margin-top: -20px;
+	width: 100px;
+	padding: 20px;
+
+}
+
+.img_home {
+	width: 125px;
+	height: 125px;
+	margin-bottom: 30px;
+}
+
+.background_home_1 {
+	background: #000d90;
+	background-repeat: no-repeat;
+	margin-top: -25px;
+	padding-bottom: 20px;
+
+}
+
+.background_home_2 {
+	background: #06da0b;
+}
+
+.background_home_3 {
+	background-image: linear-gradient(180deg, #f0f1f2, #fff);
+}
+
+.corpo_home_2 {
+	background: none;
+	color: #000;
+}
+
+.corpo_home_3 {
+	margin-top: 50px;
+	padding: 30px;
+	background-image: url('');
+	background-repeat: no-repeat;
+}
+
+.about_home_1 {
+	font-size: 20px;
+	color: #24dcb3;
+}
+
+.about_home_2 {
+	font-size: 30px;
+}
+
+.home_texto_1 {
+	color: green;
+	font-size: 3em;
+	font-weight: 400;
+	margin-top: 50px;
+	color: #06da0b;
+}
+
+.home_login {
+	background: #fff;
+	border-radius: 20px;
+	padding: 30px;
+	border: solid #eee 3px;
+}
+
+.home_login_corpo {
+	padding: 10px;
+}
+
+.edit_foto {
+	margin-top: -30px;
+	margin-left: 60px;
+	background: #fff;
+	color: #000;
+	border-radius: 100px;
+	border: solid 3px #7ecc52;
+	z-index: 100;
+	position: relative;
+	width: 40px;
+	height: 40px;
+	font-size: 25px;
+}
+
+.foto_perfil {
+	border-radius: 100px;
+	border: solid 3px #7ecc52;
+	background-size: 120px 120px;
+	width: 125px;
+	height: 125px;
+}

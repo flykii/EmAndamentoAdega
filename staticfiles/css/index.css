@@ -8,7 +8,7 @@
 /* Estilização da fonte e cores */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #fff;
     color: #333;
     line-height: 1.6;
 }
@@ -18,10 +18,13 @@ body {
     width: 80%;
     margin: auto;
     padding: 15px ;
-    background-color: #fff;
+    text-align: center;
+    background: #050233;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
     border-radius: 8px;
+    overflow-x: hidden;
 }
+
 
 /* Estilização do título */
 h2 {

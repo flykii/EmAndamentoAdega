@@ -1,0 +1,30 @@
+body {
+    background-color: rgba(150, 136, 136, 0.6);
+    background: linear-gradient(90deg, #242003 0%, #585215c2 35%, #d1dd29e0 100%);
+
+}
+
+.container1 {
+    width: 100%;
+    max-width: 1200px;
+    margin: 5px auto;
+    text-align: center;
+    padding: 30px;
+    background-color: rgba(150, 136, 136, 0.6);
+    border-radius: 15px;
+    box-shadow: 0px 0px 15px 5px rgba(139, 135, 135, 0.2);
+}
+
+h1, h2 {
+    text-transform: uppercase;
+    text-shadow: 3px 3px 3px rgba(158, 156, 21, 0.534);
+}
+
+.container p {
+    font-size: 1.2em;
+    color: black;
+}
+
+.nav-link:hover {
+    box-shadow: 0 0 5px 2px rgba(255, 255, 0, 0.5);
+}
