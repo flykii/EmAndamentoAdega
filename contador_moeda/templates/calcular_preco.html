@@ -6,36 +6,48 @@
 {% endblock %}
 
 {% block content %}
+<div class="templatemo-content "style="background: linear-gradient(90deg, #000000 0%, #1a1919c2 85%, #88836be1 140%);">
 
-<div class="container">
-    <form class="form-label" action="{% url 'calcular_preco' %}" method="POST">
-        {% csrf_token %}
-        <div class="input-group input-group-sm mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-sm"> Digite o preço de Custo do Produto:</span>
-            <input type="text" name="preco_produto" class="form-control-md" id="input-label">
-            <span class="input-group-text" id="inputGroup-sizing-sm"></span>
-            <button type="submit" class="btn btn-primary">Calcular</button>
+    <div class="container">
+        <div class="panel panel-fundo">
+            <h1>Calcular valor do produto</h1>
         </div>
-    </form>
-</div>
-<div class="container">
-    <table class="table" >
-        <thead>
-            <tr>
-                <th style="background:rgb(206, 170, 93)">Preço de custo</th>
-                <th>Porcentagen(%)</th>
-                <th>Preço de Venda</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for key, value in precos_venda.items %}
-            <tr>
-                <td>{{ preco_produto }}</td>
-                <td>Com = {{ key }}%</td>
-                <td>{{ value }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <div class="panel d-flex align-items-center justify-content-between">
+
+            <form class="form-label" action="{% url 'calcular_preco' %}" method="POST">
+                {% csrf_token %}
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><b>Digite o preço de Custo do Produto:</b></span>
+                    <input type="text" name="preco_produto" class="form-control-md" id="input-label">
+                    
+                    <button type="submit" class="btn btn-primary">Calcular</button>
+                </div>
+            </form>
+        </div>  
+        <!-- tabela com os valores -->
+        <div class="panel panel-default">
+            <div class="panel-body ">
+                    <table class="table" >
+                        <thead>
+                            <tr style="background-color: rgb(206, 170, 93);">
+                                <th>Preço de custo</th>
+                                <th>Porcentagen(%)</th>
+                                <th>Preço de Venda</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in precos_venda.items %}
+                            <tr>
+                                <td>{{ preco_produto }}</td>
+                                <td>Com = {{ key }}%</td>
+                                <td>{{ value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+               
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

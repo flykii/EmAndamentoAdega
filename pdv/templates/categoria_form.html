@@ -2,13 +2,27 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
-    <h2>Adicionar Categoria</h2>
-    <br>
-    <form method="post">
-        {% csrf_token %}
-        {{ categoria.as_p }}
-        <button type="submit">Salvar</button>
-    </form>
+<div class="templatemo-content  ">
+    <div class="container">
+        <div class="panel panel-fundo d-flex align-items-center justify-content-between">
+            <h1>Adicionar Categoria</h1>
+            <div>
+                <span class="mr-2">
+                    <a href="{% url 'user_list' %}"><i class="fa fa-plus"></i> Lista Categoria</a>
+                </span>
+            </div>
+        </div>
+        <div class="panel panel-default panel-fundo">
+            <div class="panel-body">
+                <div class="d-flex justify-content-between">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ categoria }}
+                        <button class="btn-success" type="submit">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

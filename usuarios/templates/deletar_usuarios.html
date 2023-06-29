@@ -1,10 +1,24 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block importacoes %}
+<link href="{% static 'css/main2.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
-<h2>Tem certeza que deseja excluir o usuário '{{ object.username }}'?</h2>
-<form method="post">
-  {% csrf_token %}
-  <button type="submit">Sim, excluir</button>
-  <a href="{% url 'user_list' %}">Cancelar</a>
-</form>
+<div class="templatemo-content" style="background: linear-gradient(90deg, #000000 0%, #1a1919c2 85%, #88836be1 140%);">
+  <div class="container">
+    <div class="wrap-excluir100">
+      <h2>Tem certeza que deseja excluir o usuário <b style="color:  #0022e0;">'{{ object.username }}'</b>?</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="container-login100-form-btn"></div>
+          <button class="excluir100-form-btn" type="submit">Sim, excluir</button>
+          <a href="{% url 'user_list' %}">Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

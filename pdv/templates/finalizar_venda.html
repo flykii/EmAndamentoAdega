@@ -1,11 +1,28 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block importacoes %}
+<link rel="stylesheet" href="{% static 'css/venda/modal.css' %}">
+{% endblock %}
 
 {% block content %}
-  <h2>Finalizar Venda</h2>
-  <p>Total: R$ {{ total }}</p>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Finalizar</button>
-  </form>
+<div class="templatemo-content">
+  <div class="container">
+    <div class="panel panel-fundo d-flex align-items-center justify-content-between">
+      <h1>Finalizar Venda</h1>
+      <div>
+        <span class="mr-2">
+          <h3 style="color: red;"><b>Total: {{ total|floatformat:2 }}</b></h3>
+        </span>
+      </div>
+    </div>
+    <form class="form-control-md" method="post">
+      {% csrf_token %}
+      {{ form }}
+      <button type="submit" class="btn btn-primary">Finalizar</button>
+    </form>
+  </div>
+</div>
+</div>
+</div>
 {% endblock %}

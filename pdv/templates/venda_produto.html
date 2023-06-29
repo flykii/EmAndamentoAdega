@@ -1,71 +1,76 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block importacoes %} 
-    <link rel="stylesheet" href="{% static 'css/venda/modal.css' %}">
+{% block importacoes %}
+<link rel="stylesheet" href="{% static 'css/venda/modal1.css' %}">
 {% endblock %}
 
 {% block content %}
-  
-<div class="container">
-  <h1>Venda de Produto</h1>
-  <form method="post">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-    <br>
-    <button type="submit">Adicionar ao carrinho</button>
-    
-  </form>
-  <br>
-  <hr>
-  <div>
-    <div class="d-flex align-items-center justify-content-between">
-      <h2>Carrinho</h2>
-      <div>
-        <span class="mr-2">
-          <h3 style="color: red;"><b>Total: {{ total|floatformat:2 }}</b></h3>
-        </span>
-      </div>
-    </div>
+
+<div class="container " style="margin-top: 20px; margin-bottom: 50px">
+  <h1 class="title">Venda de Produto</h1>
+  <div class="corpo_quadro">
+    <form method="POST">{% csrf_token %}
+      
+        {{ form }}
+      
+      <br>
+      <button type="submit" class="" name="add_produto">Adicionar ao carrinho</button>
+    </form>
   </div>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th class="table-warning">Produto</th>
-        <th class="table-warning">Quantidade</th>
-        <th class="table-warning">Preço</th>
-        <th class="table-warning">Subtotal</th>
-        <th class="table-warning">Remover</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in carrinho %}
+
+  <br>
+  <div class="corpo_quadro">
+    <div>
+      <div class="d-flex align-items-center justify-content-between ">
+        <h2><i class="fa-solid fa-basket-shopping"></i>Carrinho</h2>
+        <div class="row">
+          <h3><i class="fa-solid fa-sack-dollar"></i></h3>
+          <span class="mr-2">
+            <h3 style="color: red;"><b>Total: {{ total|floatformat:2 }}</b></h3>
+          </span>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <table class="table table-striped ">
+      <thead>
+        <tr>
+          <th class="table-warning">Produto</th>
+          <th class="table-warning">Quantidade</th>
+          <th class="table-warning">Preço</th>
+          <th class="table-warning">Subtotal</th>
+          <th class="table-warning">Remover</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in carrinho %}
         <tr>
           <td>{{ item.nome }}</td>
           <td>{{ item.quantidade }}</td>
           <td>{{ item.preco }}</td>
-          <td>{{ item.subtotal }}</td>          
+          <td>{{ item.subtotal }}</td>
           <td>
-            <a class="badge badge-danger" href="{% url 'remover_item_carrinho' forloop.counter0 %}" 
+            <a class="badge badge-danger" href="{% url 'remover_item_carrinho' forloop.counter0 %}"
               onclick="return confirm('Você tem certeza que deseja remover este item do carrinho?');">Remover</a>
           </td>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <h3>Total: {{ total|floatformat:2 }}</h3>
-  {% if messages %}
-      {% for message in messages %}
-          <div class="alert {{ message.tags }}">{{ message }}</div>
-      {% endfor %}
-  {% endif %}
-      <br>
-  {% if carrinho %}
+        {% endfor %}
+      </tbody>
+    </table>
+    <h3>Total: {{ total|floatformat:2 }}</h3>
+ </div>
 
-  <hr>
-  <button type="button" class="btn btn-primary" id="finalizar-venda">Finalizar Venda</button>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    <br>
+    {% if carrinho %}
+
+    <hr>
+    <button type="button" class="btn btn-primary" id="finalizar-venda">Finalizar Venda</button>
     <div id="opcoes-pagamento" class="modal">
       <div class="modal-content">
         <h3>Forma de pagamento:</h3>
@@ -83,101 +88,98 @@
           <div class="form-group" id="cliente" style="display:none;">
             <label for="cliente">Cliente:</label>
             <select name="cliente" class="form-control">
-                <option value="">Selecione um cliente</option>
-                {% for cliente in clientes %}
-                    <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
-                {% endfor %}
+              <option value="">Selecione um cliente</option>
+              {% for cliente in clientes %}
+              <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+              {% endfor %}
             </select>
-        </div>
-        
+          </div>
+
           <button type="submit" class="btn btn-success">Confirmar Pagamento</button>
           <button type="button" class="btn btn-danger" id="cancelar">Cancelar</button>
         </form>
       </div>
     </div>
   </div>
-  <br>
-  <br>
-  <br>
+  
   {% endif %}
-
-
+</div>
   {% block extra_js %}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $('input[type=radio][name=forma_pagamento]').change(function() {
-                if (this.value == 'cliente') {
-                    $("#cliente").show();
-                    $("#valor-recebido").hide();
-                } else if (this.value == 'dinheiro') {
-                    $("#cliente").hide();
-                    $("#valor-recebido").show();
-                } else {
-                    $("#cliente").hide();
-                    $("#valor-recebido").hide();
-                }
-            });
-        });
-    </script>
-
-
-    <script>
-      document.getElementById('finalizar-venda').addEventListener('click', function() {
-        document.getElementById('opcoes-pagamento').style.display = 'block';
+  <script>
+    $(document).ready(function () {
+      $('input[type=radio][name=forma_pagamento]').change(function () {
+        if (this.value == 'cliente') {
+          $("#cliente").show();
+          $("#valor-recebido").hide();
+        } else if (this.value == 'dinheiro') {
+          $("#cliente").hide();
+          $("#valor-recebido").show();
+        } else {
+          $("#cliente").hide();
+          $("#valor-recebido").hide();
+        }
       });
+    });
+  </script>
 
-      document.getElementById('cancelar').addEventListener('click', function() {
-        document.getElementById('opcoes-pagamento').style.display = 'none';
-      });
-      
-      document.querySelector('[name=forma_pagamento]').addEventListener('change', verificarPagamentoInicial);
-      document.getElementById('finalizar-venda').addEventListener('click', function() {
-          document.getElementById('opcoes-pagamento').style.display = 'block';
-        });
 
-            // Adicione este script
+  <script>
+    document.getElementById('finalizar-venda').addEventListener('click', function () {
+      document.getElementById('opcoes-pagamento').style.display = 'block';
+    });
+
+    document.getElementById('cancelar').addEventListener('click', function () {
+      document.getElementById('opcoes-pagamento').style.display = 'none';
+    });
+
+    document.querySelector('[name=forma_pagamento]').addEventListener('change', verificarPagamentoInicial);
+    document.getElementById('finalizar-venda').addEventListener('click', function () {
+      document.getElementById('opcoes-pagamento').style.display = 'block';
+    });
+
+    // Adicione este script
     var pagamentos = document.querySelectorAll('[name=forma_pagamento]');
     for (var i = 0; i < pagamentos.length; i++) {
-        pagamentos[i].addEventListener('change', function() {
-            var valorRecebidoDiv = document.getElementById('valor-recebido');
-            var clienteDiv = document.getElementById('cliente'); // Adicione esta linha para selecionar o div do cliente
+      pagamentos[i].addEventListener('change', function () {
+        var valorRecebidoDiv = document.getElementById('valor-recebido');
+        var clienteDiv = document.getElementById('cliente'); // Adicione esta linha para selecionar o div do cliente
 
-            if (this.value === 'dinheiro') {
-                valorRecebidoDiv.style.display = 'block';
-                clienteDiv.style.display = 'none'; // Adicione esta linha para esconder o campo do cliente
-            } else if (this.value === 'cliente') { // Adicione este else if para mostrar o campo do cliente
-                valorRecebidoDiv.style.display = 'none';
-                clienteDiv.style.display = 'block';
-            } else {
-                valorRecebidoDiv.style.display = 'none';
-                clienteDiv.style.display = 'none'; // Adicione esta linha para esconder o campo do cliente
-            }
-        });
+        if (this.value === 'dinheiro') {
+          valorRecebidoDiv.style.display = 'block';
+          clienteDiv.style.display = 'none'; // Adicione esta linha para esconder o campo do cliente
+        } else if (this.value === 'cliente') { // Adicione este else if para mostrar o campo do cliente
+          valorRecebidoDiv.style.display = 'none';
+          clienteDiv.style.display = 'block';
+        } else {
+          valorRecebidoDiv.style.display = 'none';
+          clienteDiv.style.display = 'none'; // Adicione esta linha para esconder o campo do cliente
+        }
+      });
     }
 
     // Adicione esta função
     function verificarPagamentoInicial() {
-        var formaPagamentoSelecionada = document.querySelector('[name=forma_pagamento]:checked');
-        var valorRecebidoDiv = document.getElementById('valor-recebido');
-        var clienteDiv = document.getElementById('cliente'); // Adicione esta linha para selecionar o div do cliente
+      var formaPagamentoSelecionada = document.querySelector('[name=forma_pagamento]:checked');
+      var valorRecebidoDiv = document.getElementById('valor-recebido');
+      var clienteDiv = document.getElementById('cliente'); // Adicione esta linha para selecionar o div do cliente
 
-        if (formaPagamentoSelecionada.value === 'dinheiro') {
-            valorRecebidoDiv.style.display = 'block';
-            clienteDiv.style.display = 'none'; // Adicione esta linha para esconder o campo do cliente
-        } else if (formaPagamentoSelecionada.value === 'cliente') { // Adicione este else if para mostrar o campo do cliente
-            valorRecebidoDiv.style.display = 'none';
-            clienteDiv.style.display = 'block';
-        } else {
-            valorRecebidoDiv.style.display = 'none';
-            clienteDiv.style.display = 'none'; // Adicione esta linha para esconder o campo do cliente
-        }
+      if (formaPagamentoSelecionada.value === 'dinheiro') {
+        valorRecebidoDiv.style.display = 'block';
+        clienteDiv.style.display = 'none'; // Adicione esta linha para esconder o campo do cliente
+      } else if (formaPagamentoSelecionada.value === 'cliente') { // Adicione este else if para mostrar o campo do cliente
+        valorRecebidoDiv.style.display = 'none';
+        clienteDiv.style.display = 'block';
+      } else {
+        valorRecebidoDiv.style.display = 'none';
+        clienteDiv.style.display = 'none'; // Adicione esta linha para esconder o campo do cliente
+      }
     }
 
     // Chame a função quando a página carregar
     verificarPagamentoInicial();
 
-    </script>
+  </script>
 
   {% endblock %}
 {% endblock %}

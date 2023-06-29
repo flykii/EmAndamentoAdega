@@ -8,8 +8,9 @@ from django.db.models.functions import TruncDay, TruncMonth, TruncYear
 from datetime import datetime
 from django.db.models import F
 from django.utils import timezone
-from cliente.models import Cliente
+from cliente.models import Cliente, Transacao
 from decimal import Decimal
+
 
 
 
@@ -108,7 +109,6 @@ def venda_produto(request):
     return render(request, 'venda_produto.html', {'form': form, 'carrinho': carrinho, 'total': total, 
                                                   'pagamento_form': pagamento_form, 'clientes': clientes})
 
-
 def finalizar_venda(request):
     carrinho = request.session.get('carrinho', [])
     total = 0
@@ -152,7 +152,9 @@ def finalizar_venda(request):
                         return redirect('finalizar_venda')
                     else:
                         cliente.limite_compras -= Decimal(total)
-
+                        Transacao.objects.create(cliente=cliente, valor=total, tipo=Transacao.TIPO_VENDA)
+                        messages.success(request, f'Venda adicionada com sucesso para {cliente.nome}.')
+            
                         cliente.save()
 
             for item in carrinho:
@@ -165,10 +167,8 @@ def finalizar_venda(request):
             return redirect('venda_produto')
 
     form = FinalizarVendaForm()
+    
     return render(request, 'finalizar_venda.html', {'form': form, 'total': total})
-
-
-
 
 
                                        

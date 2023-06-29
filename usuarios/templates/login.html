@@ -1,20 +1,92 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block importacoes %}
+<link href="{% static 'css/main2.css' %}" rel="stylesheet">
+<!-- <link rel="icon" type="image/png" href="images/icons/favicon.ico"/> -->
+<link href="{% static 'css/fonts/font-awesome.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/animate/animate.css' %}" rel="stylesheet">
+<link href="{% static 'css/css-hamburgers/hamburgers.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/select2/select2.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/util.css' %}" rel="stylesheet">
+
+<link href="{% static 'css/index.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="text-center my-4">Faça seu login</h2>
-            <form method="POST" action="{% url 'login' %}">
-                {% csrf_token %}
-                <table>
-                    {{ form.as_table }}
-                </table>                   
-                <button type="submit" class="btn btn-primary">Entrar</button>
-                <a href="{% url 'user_create' %}" class="btn btn-link">Cadastre-se</a>
+<div class="limiter ">
+    <div class="templatemo-content">
+        {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="container panel-fundo wrap-login100" 
+            style="background: linear-gradient(90deg, #000000 0%, #1a1919c2 85%, #88836be1 140%); margin-bottom: 30px;">
+            <div class="login100-pic js-tilt" data-tilt>
+                <img src="{% static 'img/logo.png' %}" alt="IMG">
+            </div>
+
+            <form class="login100-form validate-form" method="POST" action="{% url 'login' %}">{% csrf_token %}
+                <span class="login100-form-title">
+                    Fazer login
+                </span>
+
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="text" name="{{ form.username.name }}"
+                        placeholder="{{ form.username.label }}" required>
+                    <span class="focus-input100"></span>
+                    <span class="symbol-input100">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                    </span>
+                </div>
+
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="password" name="{{ form.password.name }}"
+                        placeholder="{{ form.password.label }}" required>
+                    <span class="focus-input100"></span>
+                    <span class="symbol-input100">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                    </span>
+                </div>
+
+                <div class="container-login100-form-btn">
+                    <button class="login100-form-btn" type="submit">
+                        Logar
+                    </button>
+                </div>
+
+                <div class="text-center p-t-12">
+                    <span class="txt1">
+                        Esqueceu
+                    </span>
+                    <a class="txt2" href="#">
+                        Usuário / Senha?
+                    </a>
+                </div>
+
+                <div class="text-center p-t-136">
+                    <a class="txt2" href="{% url 'user_create' %}">
+                        Criar uma Conta
+                        <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+                    </a>
+                </div>
             </form>
         </div>
     </div>
 </div>
+
+<script src="{% static 'jquery/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/popper.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'css/select2/select2.min.js' %}"></script>
+<script src="{% static 'js/tilt/tilt.jquery.min.js' %}"></script>
+<script>
+    $('.js-tilt').tilt({
+        scale: 1.1
+    })
+</script>
+<script src="{% static 'js/main.js' %}"></script>
 {% endblock %}

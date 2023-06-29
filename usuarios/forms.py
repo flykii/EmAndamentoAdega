@@ -32,6 +32,21 @@ class CustomUserCreationForm(BaseUserForm, UserCreationForm):
         self.fields['username'].label = 'Usuário'
         self.fields['email'].label = 'Email'
 
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
+        user_type = cleaned_data.get('user_type')
+
+        if not username:
+            self.add_error('username', 'O campo "Usuário" é obrigatório.')
+        if not email:
+            self.add_error('email', 'O campo "Email" é obrigatório.')
+        if not user_type:
+            self.add_error('user_type', 'O campo "Perfil de usuário" é obrigatório.')
+
+        return cleaned_data
+
 class CustomUserEditForm(BaseUserForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -12,3 +12,16 @@ class Cliente(models.Model):
 
     def __str__(self):
         return self.nome
+
+
+class Transacao(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    TIPO_VENDA = 'venda'
+    TIPO_PAGAMENTO = 'pagamento'
+    TIPO_CHOICES = [
+        (TIPO_VENDA, 'Venda'),
+        (TIPO_PAGAMENTO, 'Pagamento'),
+    ]
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
+    data = models.DateTimeField(auto_now_add=True)

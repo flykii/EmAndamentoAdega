@@ -23,31 +23,33 @@
   {% if request.user.user_type == "ADMIN" or "GERENTE" %}
   <div class="panel panel-default">
     <div class="tabela panel-body">
-      <table id="app" class="sua-tabela table-hover">
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Perfil usuário</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for user in object_list %}
-          <tr>
-            <td><i class="fa-solid fa-user"></i> <b>{{ user.username }}</b></td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.get_user_type_display }}</td>
-            <td>
-              <a class="btn btn-outline-warning btn-sm" href="{% url 'user_update' user.pk %}"><i class="fas fa-pencil-alt"
-                  style="color: rgba(216, 174, 66, 0.932);"></i></a>
-              <a class="btn btn-outline-danger btn-sm" href="{% url 'user_delete' user.pk %}"><i class="fa fa-times"
-                  style="color: rgba(170, 9, 9, 0.959);"></i></a>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="table-responsive"> 
+        <table id="app" class="sua-tabela table-hover">
+          <thead>
+            <tr style="background-color:#d5c72fad;">
+              <th>Username</th>
+              <th>Email</th>
+              <th>Perfil usuário</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in object_list %}
+            <tr>
+              <td><i class="fa-solid fa-user"></i> <b>{{ user.username }}</b></td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.get_user_type_display }}</td>
+              <td>
+                <a class="btn btn-outline-warning btn-sm" href="{% url 'user_update' user.pk %}"><i class="fas fa-pencil-alt"
+                    style="color: rgba(216, 174, 66, 0.932);"></i></a>
+                <a class="btn btn-outline-danger btn-sm" href="{% url 'user_delete' user.pk %}"><i class="fa fa-times"
+                    style="color: rgba(170, 9, 9, 0.959);"></i></a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

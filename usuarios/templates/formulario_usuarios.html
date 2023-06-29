@@ -1,26 +1,31 @@
 {% extends 'base.html' %}
+{load static}
 
 {% block content %}
-<div class="container">
-    <h2>
-        {% if form.instance.pk %}
-            Editar
-        {% else %}
-            Criar
-        {% endif %} usuário
-    </h2>
-    <form method="post">
-    {% csrf_token %}
-        <table>           
-            {{ form.as_table }}
-        </table>
-        
-        
-        {% if form.instance.pk %}
-            <button type="submit">Salvar</button>
-        {% else %}
-            <button type="submit">Cadastrar</button>
-        {% endif %} 
-    </form>
-</div>
-        {% endblock %}
+    <div class="templatemo-content ">
+        <div class="container ">
+            <div class="panel panel-fundo d-flex align-items-center justify-content-between">
+                <h1>{% if form.instance.pk %}Editar{% else %}Criar{% endif %} usuário</h1>
+                <div>
+                    <span class="mr-2">
+                        <a href="{% url 'user_list' %}"><i class="fa fa-plus"></i> Lista usuário</a>
+                    </span>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <form method="post">{% csrf_token %}
+                    <div class="tabela panel-body"> 
+                        <table class="table">           
+                            {{ form.as_table }}
+                        </table>
+                    </div>
+                    {% if form.instance.pk %}
+                    <button class="btn-primary" type="submit">Salvar Alteração</button>
+                    {% else %}
+                    <button class="btn-primary" type="submit">Cadastrar</button>
+                    {% endif %} 
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

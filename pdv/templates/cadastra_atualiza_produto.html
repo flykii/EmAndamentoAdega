@@ -6,25 +6,39 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>{% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %} Produto</h2>
-    <form method="post" id="produto-form">
-        {% csrf_token %}
-        {% for field in form %}
-            {% if field.name != 'quantidade_na_camarafria' %}
-                <div>
-                    {{ field.label_tag }}
-                    {{ field }}
-                </div>
-            {% endif %}
-        {% endfor %}
-        <div id="quantidade-na-camarafria" style="display: none;">
-            <label for="{{ form.quantidade_na_camarafria.auto_id }}">Quantidade na câmara fria:</label>
-            {{ form.quantidade_na_camarafria }}
+<div class="templatemo-content ">
+    <div class="container ">
+        <div class="panel panel-fundo d-flex align-items-center justify-content-between">
+            <h1>{% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %} Produto</h1>
+            <div>
+                <span class="mr-2">
+                    <a href="{% url 'lista_produtos' %}"><i class="fa fa-plus"></i> Lista Produtos </a>
+                </span>
+            </div>
         </div>
-        <button type="submit">Salvar</button>
-    </form>
-    <div id="resumo"></div>
+        <form method="post" id="produto-form">{% csrf_token %}
+            <div class="panel panel-default">
+                <div class="tabela panel-body">
+                    <table class="sua-tabela table-hover " id="tabela_produtos">
+                    {% for field in form %}
+                        {% if field.name != 'quantidade_na_camarafria' %}
+                            <tr>
+                                <td><b>{{ field.label_tag }}</b></td>
+                                <td>{{ field}}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </table>
+                </div>
+                <div id="quantidade-na-camarafria" style="display: none; color: rgb(211, 198, 11); background-color: rgb(37, 37, 37);">
+                    <label for="{{ form.quantidade_na_camarafria.auto_id }}"><b>Quantidade na câmara fria:</b></label>
+                    {{ form.quantidade_na_camarafria }}
+                </div>
+                <button type="submit">Salvar</button>
+            </div>
+        </form>
+        <div id="resumo"></div>
+    </div>
 </div>
 
 <script>
@@ -132,8 +146,5 @@
     const estoque = form.querySelector('#id_estoque');
     estoque.addEventListener('input', calcularResumo);
 
-
 </script>
-<br>
-<br>
 {% endblock %}
